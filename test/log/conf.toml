@@ -1,0 +1,7 @@
+[golory]
+    debug = true
+    [golory.log.defaultLog]
+        debug = false
+        level = "info"
+        path = "./default.log"
+
