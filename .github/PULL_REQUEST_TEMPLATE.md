@@ -2,7 +2,7 @@
 Please explain the changes you made here.
 
 ### Checklist
-- [ ] use gofmt to format code before you issuing a pr
-- [ ] use vendor to manage third-party dependencies
+- [ ] code formatted with gofmt
+- [ ] third-party dependencies are imported to vendor directory
 - [ ] support go version 1.9+
-- [ ] add license header in your created file
+- [ ] license header added to newly created files
