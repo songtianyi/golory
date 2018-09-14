@@ -8,6 +8,6 @@ docs: http://golory.askuy.com
 
 ### Contribution guide
 * use gofmt to format code before you issuing a pr
-* use vendor to manage third part dependencies
-* go version 1.9.7+
+* use vendor to manage third-party dependencies
+* support go version 1.9+
 
