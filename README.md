@@ -10,6 +10,7 @@
 * use gofmt to format code before you issuing a pr
 * use vendor to manage third-party dependencies
 * support go version 1.9+
+* add license header in your created file
 * steps to make a pull request
   ```bash
   # get golory source code
