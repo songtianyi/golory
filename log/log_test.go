@@ -1,9 +1,8 @@
-package main
+package tests
 
 import (
 	"flag"
-	"github.com/1pb-club/golory"
-	"go.uber.org/zap"
+	"github.com/1pb-club/golory/log"
 )
 
 var (
@@ -11,7 +10,7 @@ var (
 	defaultLog   *zap.Logger
 )
 
-func main() {
+func TestLog(t *testing.T) {
 	flag.StringVar(&confFilePath, "c", "conf.toml", "配置文件路径")
 	flag.Parse()
 
