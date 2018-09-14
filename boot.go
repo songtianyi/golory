@@ -3,7 +3,7 @@ package golory
 import "fmt"
 
 // initiate golory components from configuration file or binary content
-// 
+//
 // file format support: toml
 func Boot(cfg interface{}) error {
 	switch cfg.(type) {
