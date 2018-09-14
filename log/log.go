@@ -41,7 +41,6 @@ func InitLog(config LogStruct) *zap.Logger {
 	var err error
 	Logger, err := cfg.Build()
 	if err != nil {
-		panic(err.Error())
 		log.Fatal("init logger error: ", err)
 	}
 	return Logger
