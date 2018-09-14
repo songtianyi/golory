@@ -14,7 +14,7 @@ type LogStruct struct {
 	Path  string
 }
 
-func InitLog(config LogStruct) *zap.Logger {
+func Boot(config LogStruct) *zap.Logger {
 	var js string
 	if config.Debug {
 		js = fmt.Sprintf(`{
