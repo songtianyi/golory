@@ -6,26 +6,30 @@ import (
 	"github.com/BurntSushi/toml"
 	"github.com/go-yaml/yaml"
 	"io/ioutil"
-	"sync"
 )
 
 var (
-	gly *Golory
+	gly *golory
 )
 
 // struct for holding all data
-type Golory struct {
-	registry sync.Map
-	cfg      map[string]interface{}
-	booted   bool
+type golory struct {
+	cfg     *invokerConfig
+	handler *invokerHandler
+	booted  bool
 }
 
 func init() {
-	gly = &Golory{booted: false}
+	gly = &golory{
+		booted: false,
+		cfg: &invokerConfig{},
+		handler:&invokerHandler{},
+	}
 }
 
 // initiate golory components from configuration
 // file format support: toml,json,yaml
+// goroutine unsafe
 func Boot(cfg interface{}) error {
 	if gly.booted {
 		// do clear stuff
@@ -43,6 +47,7 @@ func Boot(cfg interface{}) error {
 	default:
 		return fmt.Errorf("cannot boot golory configuration, %s", cfg)
 	}
+	gly.initLog()
 	gly.booted = true
 	return nil
 }
