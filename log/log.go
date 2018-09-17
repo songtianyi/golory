@@ -14,7 +14,12 @@ type Cfg struct {
 	Path  string
 }
 
-func Boot(config Cfg) *zap.Logger {
+// todo for dynamic config & enrich log api
+type Logger struct {
+	*zap.Logger
+}
+
+func Boot(config Cfg) *Logger {
 	var js string
 	if config.Debug {
 		js = fmt.Sprintf(`{
@@ -39,10 +44,10 @@ func Boot(config Cfg) *zap.Logger {
 	cfg.EncoderConfig = zap.NewProductionEncoderConfig()
 	cfg.EncoderConfig.EncodeTime = zapcore.ISO8601TimeEncoder
 	var err error
-	Logger, err := cfg.Build()
+	l, err := cfg.Build()
 	if err != nil {
 		log.Fatal("init logger error: ", err)
 	}
-	return Logger
+	return &Logger{l}
 
 }
