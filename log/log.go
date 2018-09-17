@@ -8,13 +8,13 @@ import (
 	"log"
 )
 
-type LogStruct struct {
+type Cfg struct {
 	Debug bool
 	Level string
 	Path  string
 }
 
-func Boot(config LogStruct) *zap.Logger {
+func Boot(config Cfg) *zap.Logger {
 	var js string
 	if config.Debug {
 		js = fmt.Sprintf(`{

@@ -1,2 +1,5 @@
 # IDE
 .vscode
+
+# log
+log/*.log
