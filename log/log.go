@@ -1,3 +1,4 @@
+// golory log component
 package log
 
 import (

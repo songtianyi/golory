@@ -1,4 +1,4 @@
-// golory is ALL IN ONE package for go software
+// Package golory is ALL IN ONE package for go software
 // development with best practice usages support
 package golory
 
@@ -36,7 +36,7 @@ func init() {
 	}
 }
 
-// Initiate components from configuration file or binary content.
+// Boot initiate components from configuration file or binary content.
 // Toml, Json, Yaml supported.
 func Boot(cfg interface{}) error {
 	if gly.booted {
