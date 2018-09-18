@@ -5,7 +5,8 @@ package golory
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/1pb-club/golory/log"
+	"github.com/1pb-club/golory/components/log"
+	"github.com/1pb-club/golory/components/redis"
 	"github.com/BurntSushi/toml"
 	"github.com/go-yaml/yaml"
 	"io/ioutil"
@@ -15,17 +16,18 @@ var (
 	gly *golory
 )
 
-// golory struct is used to hold all data
+// golory struct is used to hold all data.
 type golory struct {
 	cfg        *goloryConfig
 	components *handler
 	booted     bool
 }
 
-// goloryConfig is used to store golory configurations
+// goloryConfig is used to store golory configurations.
 type goloryConfig struct {
-	Debug   bool
-	Loggers map[string]log.CommonCfg
+	Debug     bool
+	Loggers   map[string]log.CommonCfg
+	RedisOpts map[string]redis.CommonCfg
 }
 
 func init() {
@@ -61,7 +63,7 @@ func Boot(cfg interface{}) error {
 	return nil
 }
 
-// Initate golory components from file
+// Initate golory components from file.
 func parseFile(path string) error {
 	// read file to []byte
 	b, err := ioutil.ReadFile(path)
@@ -71,7 +73,7 @@ func parseFile(path string) error {
 	return parseBytes(b)
 }
 
-// Initiate golory components from binary content
+// Initiate golory components from binary content.
 func parseBytes(b []byte) error {
 	if err := parseCfg(b); err != nil {
 		return err
@@ -80,7 +82,7 @@ func parseBytes(b []byte) error {
 }
 
 // Do parse config.
-// It will try serveral formats one by one
+// It will try serveral formats one by one.
 func parseCfg(b []byte) error {
 	// try file formats
 	var err error
@@ -109,8 +111,17 @@ func (g *golory) initLog() {
 		return
 	}
 	for key, cfg := range g.cfg.Loggers {
-		// TODO log.Boot should return error when Boot failed
-		obj := log.Boot(cfg)
-		g.components.setLogger(key, obj)
+		logger := log.Boot(cfg)
+		g.components.setLogger(key, logger)
+	}
+}
+
+func (g *golory) initRedis() {
+	if g.cfg.RedisOpts == nil {
+		return
+	}
+	for key, cfg := range g.cfg.RedisOpts {
+		c := redis.Boot(cfg)
+		g.components.setRedis(key, c)
 	}
 }
