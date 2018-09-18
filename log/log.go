@@ -1,3 +1,4 @@
+// golory log component
 package log
 
 import (
@@ -8,41 +9,48 @@ import (
 	"log"
 )
 
-type LogStruct struct {
+// Common logger configurations
+type CommonCfg struct {
 	Debug bool
 	Level string
 	Path  string
 }
 
-func InitLog(config LogStruct) *zap.Logger {
+// TODO: for dynamic config & enrich log api
+type Logger struct {
+	*zap.Logger
+}
+
+// Initiate logger from config
+func Boot(cfg CommonCfg) *Logger {
 	var js string
-	if config.Debug {
+	if cfg.Debug {
 		js = fmt.Sprintf(`{
       "level": "%s",
       "encoding": "json",
       "outputPaths": ["stdout"],
       "errorOutputPaths": ["stdout"]
-      }`, config.Level)
+      }`, cfg.Level)
 	} else {
 		js = fmt.Sprintf(`{
       "level": "%s",
       "encoding": "json",
       "outputPaths": ["%s"],
       "errorOutputPaths": ["%s"]
-      }`, config.Level, config.Path, config.Path)
+      }`, cfg.Level, cfg.Path, cfg.Path)
 	}
 
-	var cfg zap.Config
-	if err := json.Unmarshal([]byte(js), &cfg); err != nil {
+	var zcfg zap.Config
+	if err := json.Unmarshal([]byte(js), &zcfg); err != nil {
 		panic(err)
 	}
-	cfg.EncoderConfig = zap.NewProductionEncoderConfig()
-	cfg.EncoderConfig.EncodeTime = zapcore.ISO8601TimeEncoder
+	zcfg.EncoderConfig = zap.NewProductionEncoderConfig()
+	zcfg.EncoderConfig.EncodeTime = zapcore.ISO8601TimeEncoder
 	var err error
-	Logger, err := cfg.Build()
+	l, err := zcfg.Build()
 	if err != nil {
 		log.Fatal("init logger error: ", err)
 	}
-	return Logger
+	return &Logger{l}
 
 }
