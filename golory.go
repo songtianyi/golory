@@ -1,3 +1,5 @@
+// golory is ALL IN ONE package for go software
+// development with best practice usages support
 package golory
 
 import (
@@ -13,13 +15,14 @@ var (
 	gly *golory
 )
 
-// struct for holding all data
+// golory struct is usaged to hold all data
 type golory struct {
 	cfg     *goloryConfig
 	handles *handler
 	booted  bool
 }
 
+// goloryConfig is used to store golory configurations
 type goloryConfig struct {
 	Debug bool
 	Log   map[string]log.Cfg
@@ -33,9 +36,9 @@ func init() {
 	}
 }
 
-// initiate golory components from configuration
-// file format support: toml,json,yaml
-// goroutine unsafe
+// Initiate components from configuration file or binary content.
+// file format support: toml, json, yaml.
+// note: is goroutine unsafe
 func Boot(cfg interface{}) error {
 	if gly.booted {
 		// do clear stuff
@@ -51,7 +54,7 @@ func Boot(cfg interface{}) error {
 			return err
 		}
 	default:
-		return fmt.Errorf("cannot boot golory configuration, %s", cfg)
+		return fmt.Errorf("only string or []byte supported, %s", cfg)
 	}
 	// do initiation
 	gly.init()

@@ -5,8 +5,8 @@ import (
 )
 
 // exported errors
-
 var (
+	// error occurred when parse configuration
 	GLY_PARSE_CFG_ERROR = fmt.Errorf("parse cfg failed")
 )
 

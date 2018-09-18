@@ -1,6 +1,0 @@
-[golory]
-    asdf = "adf"
-    [log]
-        debug = false
-        level = "info"
-        path = "./default.log"
