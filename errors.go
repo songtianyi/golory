@@ -4,13 +4,13 @@ import (
 	"fmt"
 )
 
-// exported errors
+// Exported errors
 var (
-	// error occurred when parse configuration
+	// Error occurred when parse configuration
 	GLY_PARSE_CFG_ERROR = fmt.Errorf("parse cfg failed")
 )
 
-// join strings
+// Join strings
 func wrap(e error, cause error) error {
 	return fmt.Errorf("%s, %s", e.Error(), cause.Error())
 }

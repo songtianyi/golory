@@ -24,8 +24,8 @@ type golory struct {
 
 // goloryConfig is used to store golory configurations
 type goloryConfig struct {
-	Debug bool
-	Log   map[string]log.CommonCfg
+	Debug   bool
+	Loggers map[string]log.CommonCfg
 }
 
 func init() {
@@ -37,7 +37,7 @@ func init() {
 }
 
 // Initiate components from configuration file or binary content.
-// file format support: toml, json, yaml.
+// Toml, Json, Yaml supported.
 func Boot(cfg interface{}) error {
 	if gly.booted {
 		// do clear stuff
@@ -61,7 +61,7 @@ func Boot(cfg interface{}) error {
 	return nil
 }
 
-// initate golory components from file
+// Initate golory components from file
 func parseFile(path string) error {
 	// read file to []byte
 	b, err := ioutil.ReadFile(path)
@@ -71,7 +71,7 @@ func parseFile(path string) error {
 	return parseBytes(b)
 }
 
-// initiate golory components from binary content
+// Initiate golory components from binary content
 func parseBytes(b []byte) error {
 	if err := parseCfg(b); err != nil {
 		return err
@@ -98,19 +98,19 @@ func parseCfg(b []byte) error {
 	return wrap(e, err)
 }
 
-// init all components
+// Init all components
 func (g *golory) init() {
 	g.initLog()
 }
 
-// init logger
+// Init log component
 func (g *golory) initLog() {
-	// todo generate default log
-	if len(g.cfg.Log) > 0 {
-		for key, config := range g.cfg.Log {
-			obj := log.Boot(config)
-			g.components.setLogger(key, obj)
-			// TODO
-		}
+	if g.cfg.Loggers == nil {
+		return
+	}
+	for key, cfg := range g.cfg.Loggers {
+		// TODO log.Boot should return error when Boot failed
+		obj := log.Boot(cfg)
+		g.components.setLogger(key, obj)
 	}
 }
