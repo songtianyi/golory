@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/1pb-club/golory/components/log"
+	"github.com/1pb-club/golory/components/redis"
 	"github.com/BurntSushi/toml"
 	"github.com/go-yaml/yaml"
 	"io/ioutil"
@@ -24,8 +25,9 @@ type golory struct {
 
 // goloryConfig is used to store golory configurations.
 type goloryConfig struct {
-	Debug   bool
-	Loggers map[string]log.CommonCfg
+	Debug     bool
+	Loggers   map[string]log.CommonCfg
+	RedisOpts map[string]redis.CommonCfg
 }
 
 func init() {
@@ -109,10 +111,17 @@ func (g *golory) initLog() {
 		return
 	}
 	for key, cfg := range g.cfg.Loggers {
-		// TODO log.Boot should return error when Boot failed
-		obj := log.Boot(cfg)
-		g.components.setLogger(key, obj)
-		obj.Debug(key)
-		fmt.Println(key, obj)
+		logger := log.Boot(cfg)
+		g.components.setLogger(key, logger)
+	}
+}
+
+func (g *golory) initRedis() {
+	if g.cfg.RedisOpts == nil {
+		return
+	}
+	for key, cfg := range g.cfg.RedisOpts {
+		c := redis.Boot(cfg)
+		g.components.setRedis(key, c)
 	}
 }

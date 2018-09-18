@@ -29,7 +29,24 @@ func ExampleLogger() {
 	if err := golory.Boot([]byte(cfg)); err != nil {
 		fmt.Printf("boot golory failed, %s", err)
 	}
+	// TODO
 	fmt.Println(golory.Logger("asdf"))
 	// Output:
 	// <nil>
+}
+
+func ExampleRedis() {
+	cfg := `
+	[golory]
+		[redis]
+		  Addr = "192.168.1.99:6379"
+	`
+	if err := golory.Boot([]byte(cfg)); err != nil {
+		fmt.Printf("boot golory failed, %s", err)
+	}
+	// TODO
+	fmt.Println(golory.Redis("sdf"))
+	// Output:
+	// <nil>
+
 }

@@ -2,6 +2,7 @@ package golory
 
 import (
 	"github.com/1pb-club/golory/components/log"
+	"github.com/1pb-club/golory/components/redis"
 )
 
 // Logger return a log.Logger by name
@@ -10,6 +11,6 @@ func Logger(name string) *log.Logger {
 }
 
 // Redis do nothing
-func Redis() {
-
+func Redis(name string) *redis.Client {
+	return gly.components.getRedis(name)
 }
