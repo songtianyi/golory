@@ -87,7 +87,7 @@ func parseCfg(b []byte) error {
 	if err = toml.Unmarshal(b, &gly.cfg); err == nil {
 		return nil
 	}
-	e := wrap(GLY_PARSE_CFG_ERROR, err)
+	e := wrap(ErrParseCfg, err)
 	if err = yaml.Unmarshal(b, &gly.cfg); err == nil {
 		return nil
 	}
