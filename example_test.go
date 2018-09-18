@@ -24,7 +24,7 @@ func ExampleLogger() {
     	[golory.log]
     		debug = true
     		level = "info"
-    		path = "./default.log"
+    		path = "default.log"
 	`
 	if err := golory.Boot([]byte(cfg)); err != nil {
 		fmt.Printf("boot golory failed, %s", err)

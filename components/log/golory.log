@@ -1,0 +1,11 @@
+{"level":"info","ts":"2018-09-18T16:05:07.942+0800","caller":"log/example_test.go:15","msg":"test debug log"}
+{"level":"info","ts":"2018-09-18T16:05:18.945+0800","caller":"log/example_test.go:15","msg":"test debug log"}
+{"level":"info","ts":"2018-09-18T16:05:20.807+0800","caller":"log/example_test.go:15","msg":"test debug log"}
+{"level":"info","ts":"2018-09-18T16:05:35.140+0800","caller":"log/example_test.go:15","msg":"test debug log"}
+{"level":"info","ts":"2018-09-18T16:06:12.715+0800","caller":"log/example_test.go:14","msg":"test debug log"}
+{"level":"info","ts":"2018-09-18T17:06:44.934+0800","caller":"log/example_test.go:14","msg":"test debug log"}
+{"level":"info","ts":"2018-09-18T17:07:08.040+0800","caller":"log/example_test.go:14","msg":"test debug log"}
+{"level":"info","ts":"2018-09-18T20:46:15.617+0800","caller":"log/example_test.go:14","msg":"test debug log"}
+{"level":"info","ts":"2018-09-18T20:47:51.972+0800","caller":"log/example_test.go:14","msg":"test debug log"}
+{"level":"info","ts":"2018-09-18T20:48:56.146+0800","caller":"log/example_test.go:14","msg":"test debug log"}
+{"level":"info","ts":"2018-09-18T20:51:03.264+0800","caller":"log/example_test.go:14","msg":"test debug log"}

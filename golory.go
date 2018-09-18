@@ -5,7 +5,7 @@ package golory
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/1pb-club/golory/log"
+	"github.com/1pb-club/golory/components/log"
 	"github.com/BurntSushi/toml"
 	"github.com/go-yaml/yaml"
 	"io/ioutil"
@@ -112,5 +112,7 @@ func (g *golory) initLog() {
 		// TODO log.Boot should return error when Boot failed
 		obj := log.Boot(cfg)
 		g.components.setLogger(key, obj)
+		obj.Debug(key)
+		fmt.Println(key, obj)
 	}
 }

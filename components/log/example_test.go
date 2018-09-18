@@ -2,7 +2,7 @@ package log_test
 
 import (
 	"fmt"
-	"github.com/1pb-club/golory/log"
+	"github.com/1pb-club/golory/components/log"
 )
 
 func ExampleBoot() {

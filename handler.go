@@ -1,7 +1,7 @@
 package golory
 
 import (
-	"github.com/1pb-club/golory/log"
+	"github.com/1pb-club/golory/components/log"
 )
 
 type handler struct {
