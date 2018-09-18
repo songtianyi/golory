@@ -39,7 +39,7 @@ func ExampleRedis() {
 	cfg := `
 	[golory]
 		[redis]
-		  Addr = "192.168.1.99:6379"
+		  Addr = "127.0.0.1:6379"
 	`
 	if err := golory.Boot([]byte(cfg)); err != nil {
 		fmt.Printf("boot golory failed, %s", err)
