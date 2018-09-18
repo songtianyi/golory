@@ -15,14 +15,11 @@ var (
 
 // struct for holding all data
 type golory struct {
-	cfg     *invokerConfig
-	handler *invokerHandler
+	cfg     *goloryConfig
+	handles *handler
 	booted  bool
 }
 
-type invokerConfig struct {
-	Golory goloryConfig
-}
 type goloryConfig struct {
 	Debug bool
 	Log   map[string]log.Cfg
@@ -31,8 +28,8 @@ type goloryConfig struct {
 func init() {
 	gly = &golory{
 		booted:  false,
-		cfg:     &invokerConfig{},
-		handler: &invokerHandler{},
+		cfg:     &goloryConfig{},
+		handles: &handler{},
 	}
 }
 
@@ -46,43 +43,37 @@ func Boot(cfg interface{}) error {
 	}
 	switch cfg.(type) {
 	case string:
-		if err := bootFromFile(cfg.(string)); err != nil {
+		if err := parseFile(cfg.(string)); err != nil {
 			return err
 		}
 	case []byte:
-		if err := bootFromBytes(cfg.([]byte)); err != nil {
+		if err := parseBytes(cfg.([]byte)); err != nil {
 			return err
 		}
 	default:
 		return fmt.Errorf("cannot boot golory configuration, %s", cfg)
 	}
-	gly.initLog()
+	// do initiation
+	gly.init()
 	gly.booted = true
 	return nil
 }
 
 // initate golory components from file
-func bootFromFile(path string) error {
+func parseFile(path string) error {
 	// read file to []byte
 	b, err := ioutil.ReadFile(path)
 	if err != nil {
 		return err
 	}
-	return bootFromBytes(b)
+	return parseBytes(b)
 }
 
 // initiate golory components from binary content
-func bootFromBytes(b []byte) error {
+func parseBytes(b []byte) error {
 	if err := parseCfg(b); err != nil {
 		return err
 	}
-	// do initiation
-	fmt.Println(gly.cfg)
-	// TODO
-	// var logc log.Cfg
-	// fill(logc, gly.cfg["golory"].(map[interface{}]interface{}))
-	// ins := log.Boot(logc)
-	// gly.registry.Store("golory.log", ins)
 	return nil
 }
 
@@ -101,4 +92,21 @@ func parseCfg(b []byte) error {
 		return nil
 	}
 	return wrap(e, err)
+}
+
+func (g *golory) init() {
+	g.initLog()
+}
+
+// init invoker log
+func (g *golory) initLog() {
+	// todo generate default log
+	if len(g.cfg.Log) > 0 {
+		g.handles.log = make(map[string]*log.Logger, 0)
+		for key, config := range g.cfg.Log {
+			obj := log.Boot(config)
+			g.handles.log[key] = obj
+			// todo log
+		}
+	}
 }
