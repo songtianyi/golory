@@ -3,6 +3,7 @@ package golory
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/1pb-club/golory/log"
 	"github.com/BurntSushi/toml"
 	"github.com/go-yaml/yaml"
 	"io/ioutil"
@@ -19,11 +20,19 @@ type golory struct {
 	booted  bool
 }
 
+type invokerConfig struct {
+	Golory goloryConfig
+}
+type goloryConfig struct {
+	Debug bool
+	Log   map[string]log.Cfg
+}
+
 func init() {
 	gly = &golory{
-		booted: false,
-		cfg: &invokerConfig{},
-		handler:&invokerHandler{},
+		booted:  false,
+		cfg:     &invokerConfig{},
+		handler: &invokerHandler{},
 	}
 }
 
