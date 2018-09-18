@@ -5,7 +5,7 @@ import (
 )
 
 func TestLog(t *testing.T) {
-	logger := Boot(Cfg{
+	logger := Boot(CommonCfg{
 		Debug: false,
 		Level: "INFO",
 		Path:  "golory.log",

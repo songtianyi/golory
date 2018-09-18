@@ -25,7 +25,7 @@ type golory struct {
 // goloryConfig is used to store golory configurations
 type goloryConfig struct {
 	Debug bool
-	Log   map[string]log.Cfg
+	Log   map[string]log.CommonCfg
 }
 
 func init() {
