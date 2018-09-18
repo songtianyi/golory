@@ -15,11 +15,11 @@ var (
 	gly *golory
 )
 
-// golory struct is usaged to hold all data
+// golory struct is used to hold all data
 type golory struct {
-	cfg     *goloryConfig
-	handles *handler
-	booted  bool
+	cfg        *goloryConfig
+	components *handler
+	booted     bool
 }
 
 // goloryConfig is used to store golory configurations
@@ -30,15 +30,14 @@ type goloryConfig struct {
 
 func init() {
 	gly = &golory{
-		booted:  false,
-		cfg:     &goloryConfig{},
-		handles: &handler{},
+		booted:     false,
+		cfg:        &goloryConfig{},
+		components: newHandler(),
 	}
 }
 
 // Initiate components from configuration file or binary content.
 // file format support: toml, json, yaml.
-// note: is goroutine unsafe
 func Boot(cfg interface{}) error {
 	if gly.booted {
 		// do clear stuff
@@ -80,6 +79,8 @@ func parseBytes(b []byte) error {
 	return nil
 }
 
+// Do parse config.
+// It will try serveral formats one by one
 func parseCfg(b []byte) error {
 	// try file formats
 	var err error
@@ -97,19 +98,19 @@ func parseCfg(b []byte) error {
 	return wrap(e, err)
 }
 
+// init all components
 func (g *golory) init() {
 	g.initLog()
 }
 
-// init invoker log
+// init logger
 func (g *golory) initLog() {
 	// todo generate default log
 	if len(g.cfg.Log) > 0 {
-		g.handles.log = make(map[string]*log.Logger, 0)
 		for key, config := range g.cfg.Log {
 			obj := log.Boot(config)
-			g.handles.log[key] = obj
-			// todo log
+			g.components.setLogger(key, obj)
+			// TODO
 		}
 	}
 }

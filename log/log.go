@@ -8,17 +8,19 @@ import (
 	"log"
 )
 
+// Common logger configurations
 type Cfg struct {
 	Debug bool
 	Level string
 	Path  string
 }
 
-// todo for dynamic config & enrich log api
+// TODO: for dynamic config & enrich log api
 type Logger struct {
 	*zap.Logger
 }
 
+// Initiate logger from config
 func Boot(config Cfg) *Logger {
 	var js string
 	if config.Debug {

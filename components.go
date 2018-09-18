@@ -7,5 +7,5 @@ import (
 // Get logger by name
 func Logger(name string) *log.Logger {
 	// todo default log
-	return gly.handles.log[name]
+	return gly.components.getLogger(name)
 }
