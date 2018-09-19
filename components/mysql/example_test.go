@@ -28,7 +28,7 @@ type User struct {
 func TestBoot(t *testing.T) {
 	cfg := CommonCfg{
 		UserName:      "root",
-		PassWord:      "root",
+		PassWord:      "",
 		Addr:          "127.0.0.1:3306",
 		Name:          "golory",
 		SingularTable: true,
@@ -39,12 +39,4 @@ func TestBoot(t *testing.T) {
 		return
 	}
 	fmt.Println("Successful connection to database.")
-	err := db.Create(&User{
-		Username: "Jason",
-		Password: "12345678211",
-	}).Error
-	if err != nil {
-		t.Errorf("add user data fail , err : %s", err)
-		return
-	}
 }
