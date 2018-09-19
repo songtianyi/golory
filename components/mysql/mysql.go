@@ -21,17 +21,17 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
+// DB contains information for current db connection
 type DB struct {
 	*gorm.DB
-
 	ConnectionErr error
 }
 
-// connon db configurations
+//  CommonCfg  params
 type CommonCfg struct {
 	Type        string                 // database type defult: mysql
-	UserName    string                 // database username
-	PassWord    string                 // database password
+	Username    string                 // database username
+	Password    string                 // database password
 	Name        string                 // database name
 	Addr        string                 // database addr
 	TablePrefix string                 // database table prefix
@@ -40,7 +40,7 @@ type CommonCfg struct {
 	SingularTable bool
 }
 
-//  connection db return mysql.DB
+// Boot  Connection db return mysql.DB
 func Boot(cfg CommonCfg) *DB {
 	if cfg.Type == "" {
 		cfg.Type = "mysql"
@@ -49,9 +49,9 @@ func Boot(cfg CommonCfg) *DB {
 		cfg.TablePrefix = "golory_"
 	}
 	var buf bytes.Buffer
-	buf.WriteString(cfg.UserName)
+	buf.WriteString(cfg.Username)
 	buf.WriteString(":")
-	buf.WriteString(cfg.PassWord)
+	buf.WriteString(cfg.Password)
 	buf.WriteString("@tcp(")
 	buf.WriteString(cfg.Addr)
 	buf.WriteString(")/")
@@ -82,6 +82,6 @@ func Boot(cfg CommonCfg) *DB {
 }
 
 // close db connection
-func (this *DB) Close() {
-	this.Close()
+func (db *DB) Close() {
+	db.Close()
 }
