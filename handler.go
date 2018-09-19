@@ -26,7 +26,8 @@ type handler struct {
 
 func newHandler() *handler {
 	return &handler{
-		loggers: make(map[string]*log.Logger),
+		loggers:      make(map[string]*log.Logger),
+		redisClients: make(map[string]*redis.Client),
 	}
 }
 func (s *handler) setLogger(k string, v *log.Logger) {
