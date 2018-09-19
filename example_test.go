@@ -78,10 +78,10 @@ func ExampleMySql() {
 	cfg := `
 	[golory]
 		[golory.mysql.default]
-		  UserName = "root"
+		  UserName = "travis"
 		  PassWord = ""
 		  Addr = "127.0.0.1:3306"
-		  Name = "golory"
+		  Name = "myapp_test"
 	`
 	// [golory.mysql.user]
 	// UserName = "root"
