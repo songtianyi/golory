@@ -27,7 +27,13 @@ import (
 )
 
 var (
-	gly *golory
+	gly                       *golory
+	glyLogger                 *log.Logger
+	goloryDefaultLoggerConfig = log.CommonCfg{
+		Debug: true,
+		Level: "info",
+		Path:  "./golory.log",
+	}
 )
 
 // golory struct is used to hold all data.
@@ -126,22 +132,45 @@ func (g *golory) init() {
 
 // Init log component
 func (g *golory) initLog() {
+	// user don't set logger config
+	if g.cfg.Golory.Logger == nil {
+		glyLogger = log.Boot(goloryDefaultLoggerConfig)
+	} else {
+		// user set logger config, but not set golory logger config
+		if goloryConfigFromFile, ok := g.cfg.Golory.Logger["golory"]; !ok {
+			glyLogger = log.Boot(goloryDefaultLoggerConfig)
+		} else {
+			glyLogger = log.Boot(goloryConfigFromFile)
+		}
+	}
+
 	if g.cfg.Golory.Logger == nil {
 		return
 	}
 
+	glyLogger.Info("initLog start")
 	for key, cfg := range g.cfg.Golory.Logger {
+		// user can't use system logger
+		if key == "golory" {
+			continue
+		}
 		logger := log.Boot(cfg)
 		g.components.setLogger(key, logger)
 	}
+	glyLogger.Info("initLog end")
+
 }
 
 func (g *golory) initRedis() {
 	if g.cfg.Golory.Redis == nil {
 		return
 	}
+
+	glyLogger.Info("initRedis start")
 	for key, cfg := range g.cfg.Golory.Redis {
 		c := redis.Boot(cfg)
 		g.components.setRedis(key, c)
 	}
+	glyLogger.Info("initRedis end")
+
 }
