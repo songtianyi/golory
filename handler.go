@@ -16,18 +16,21 @@ package golory
 
 import (
 	"github.com/1pb-club/golory/components/log"
+	"github.com/1pb-club/golory/components/mysql"
 	"github.com/1pb-club/golory/components/redis"
 )
 
 type handler struct {
 	loggers      map[string]*log.Logger
 	redisClients map[string]*redis.Client
+	mySqlDB      map[string]*mysql.DB
 }
 
 func newHandler() *handler {
 	return &handler{
 		loggers:      make(map[string]*log.Logger),
 		redisClients: make(map[string]*redis.Client),
+		mySqlDB:      make(map[string]*mysql.DB),
 	}
 }
 func (s *handler) setLogger(k string, v *log.Logger) {
@@ -45,5 +48,14 @@ func (s *handler) setRedis(k string, v *redis.Client) {
 
 func (s *handler) getRedis(k string) *redis.Client {
 	c := s.redisClients[k]
+	return c
+}
+
+func (s *handler) setMySql(k string, v *mysql.DB) {
+	s.mySqlDB[k] = v
+}
+
+func (s *handler) getMySql(k string) *mysql.DB {
+	c := s.mySqlDB[k]
 	return c
 }
