@@ -1,3 +1,17 @@
+// Copyright 2018 golory Authors @1pb.club. All Rights Reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 // Package golory is ALL IN ONE package for go software
 // development with best practice usages support
 package golory
@@ -25,9 +39,12 @@ type golory struct {
 
 // goloryConfig is used to store golory configurations.
 type goloryConfig struct {
-	Debug     bool
-	Loggers   map[string]log.CommonCfg
-	RedisOpts map[string]redis.CommonCfg
+	// this golory is config's namespace
+	Golory struct {
+		Debug  bool
+		Logger map[string]log.CommonCfg
+		Redis  map[string]redis.CommonCfg
+	}
 }
 
 func init() {
@@ -57,6 +74,7 @@ func Boot(cfg interface{}) error {
 	default:
 		return fmt.Errorf("only string or []byte supported, %s", cfg)
 	}
+
 	// do initiation
 	gly.init()
 	gly.booted = true
@@ -82,7 +100,7 @@ func parseBytes(b []byte) error {
 }
 
 // Do parse config.
-// It will try serveral formats one by one.
+// It will try several formats one by one.
 func parseCfg(b []byte) error {
 	// try file formats
 	var err error
@@ -103,24 +121,26 @@ func parseCfg(b []byte) error {
 // Init all components
 func (g *golory) init() {
 	g.initLog()
+	g.initRedis()
 }
 
 // Init log component
 func (g *golory) initLog() {
-	if g.cfg.Loggers == nil {
+	if g.cfg.Golory.Logger == nil {
 		return
 	}
-	for key, cfg := range g.cfg.Loggers {
+
+	for key, cfg := range g.cfg.Golory.Logger {
 		logger := log.Boot(cfg)
 		g.components.setLogger(key, logger)
 	}
 }
 
 func (g *golory) initRedis() {
-	if g.cfg.RedisOpts == nil {
+	if g.cfg.Golory.Redis == nil {
 		return
 	}
-	for key, cfg := range g.cfg.RedisOpts {
+	for key, cfg := range g.cfg.Golory.Redis {
 		c := redis.Boot(cfg)
 		g.components.setRedis(key, c)
 	}
