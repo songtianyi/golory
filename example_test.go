@@ -79,7 +79,7 @@ func ExampleMySql() {
 	[golory]
 		[golory.mysql.default]
 		  UserName = "root"
-		  PassWord = "root"
+		  PassWord = ""
 		  Addr = "127.0.0.1:3306"
 		  Name = "golory"
 	`
@@ -94,7 +94,7 @@ func ExampleMySql() {
 		fmt.Printf("boot golory failed, %s", err)
 	}
 	// TODO
-	fmt.Println(golory.MySql("default"))
+	fmt.Println(golory.MySql("default") == nil)
 	// Output:
 	// <nil>
 
