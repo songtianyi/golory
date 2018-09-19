@@ -27,10 +27,10 @@ type User struct {
 
 func TestBoot(t *testing.T) {
 	cfg := CommonCfg{
-		UserName:      "root",
+		UserName:      "travis",
 		PassWord:      "",
 		Addr:          "127.0.0.1:3306",
-		Name:          "golory",
+		Name:          "myapp_test",
 		SingularTable: true,
 	}
 	db := Boot(cfg)
