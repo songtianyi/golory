@@ -22,7 +22,7 @@ import (
 func ExampleBoot() {
 	cfg := `
 	[golory]
-    	[golory.log]
+    	[golory.log.default]
     		debug = true
     		level = "info"
     		path = "./default.log"
@@ -34,8 +34,12 @@ func ExampleBoot() {
 
 func ExampleLogger() {
 	cfg := `
-	[golory]
-    	[golory.log]
+		[golory]
+    	[golory.logger.golory]
+    		debug = true
+    		level = "error"
+    		path = "golory.log"
+		[golory.logger.default]
     		debug = true
     		level = "info"
     		path = "default.log"
@@ -43,8 +47,10 @@ func ExampleLogger() {
 	if err := golory.Boot([]byte(cfg)); err != nil {
 		fmt.Printf("boot golory failed, %s", err)
 	}
+
 	// TODO
-	fmt.Println(golory.Logger("asdf"))
+	fmt.Println(golory.Logger("golory"))
+	fmt.Println(golory.Logger("default"))
 	// Output:
 	// <nil>
 }
@@ -52,14 +58,16 @@ func ExampleLogger() {
 func ExampleRedis() {
 	cfg := `
 	[golory]
-		[redis]
+		[golory.redis.default]
 		  Addr = "127.0.0.1:6379"
+		[golory.redis.user]
+		  Addr = "127.0.0.1:6479"
 	`
 	if err := golory.Boot([]byte(cfg)); err != nil {
 		fmt.Printf("boot golory failed, %s", err)
 	}
 	// TODO
-	fmt.Println(golory.Redis("sdf"))
+	fmt.Println(golory.Redis("default"))
 	// Output:
 	// <nil>
 
