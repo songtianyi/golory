@@ -45,7 +45,7 @@ type golory struct {
 
 // goloryConfig is used to store golory configurations.
 type goloryConfig struct {
-	// this golory is config's namespace
+	// golory namespace
 	Golory struct {
 		Debug  bool
 		Logger map[string]log.CommonCfg
@@ -145,6 +145,7 @@ func (g *golory) initLog() {
 	}
 
 	if g.cfg.Golory.Logger == nil {
+		// empty map
 		return
 	}
 
@@ -163,6 +164,7 @@ func (g *golory) initLog() {
 
 func (g *golory) initRedis() {
 	if g.cfg.Golory.Redis == nil {
+		// empty map
 		return
 	}
 
