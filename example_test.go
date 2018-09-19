@@ -72,3 +72,29 @@ func ExampleRedis() {
 	// <nil>
 
 }
+
+func ExampleMySql() {
+	cfg := `
+	[golory]
+		[golory.mysql.default]
+		  UserName = "root"
+		  PassWord = "root"
+		  Addr = "127.0.0.1:3306"
+		  Name = "golory"
+	`
+	// [golory.mysql.user]
+	// UserName = "root"
+	// PassWord = "root"
+	// Addr = "127.0.0.1:3306"
+	// Name = "test"
+	// TablePrefix = "test_"
+	// Dsn = {charset = "utf8",parseTime = "True",loc = "Local"}
+	if err := golory.Boot([]byte(cfg)); err != nil {
+		fmt.Printf("boot golory failed, %s", err)
+	}
+	// TODO
+	fmt.Println(golory.MySql("default"))
+	// Output:
+	// <nil>
+
+}
