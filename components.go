@@ -30,7 +30,7 @@ func Redis(name string) *redis.Client {
 	return gly.components.getRedis(name)
 }
 
-// MySql return a mysql.DB by name
-func MySql(name string) *mysql.DB {
-	return gly.components.getMySql(name)
+// MySQL return a mysql.DB by name
+func MySQL(name string) *mysql.DB {
+	return gly.components.getMySQL(name)
 }

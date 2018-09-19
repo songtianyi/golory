@@ -45,7 +45,7 @@ type goloryConfig struct {
 		Debug  bool
 		Logger map[string]log.CommonCfg
 		Redis  map[string]redis.CommonCfg
-		MySql  map[string]mysql.CommonCfg
+		MySQL  map[string]mysql.CommonCfg
 	}
 }
 
@@ -124,7 +124,7 @@ func parseCfg(b []byte) error {
 func (g *golory) init() {
 	g.initLog()
 	g.initRedis()
-	g.initMySql()
+	g.initMySQL()
 }
 
 // Init log component
@@ -151,12 +151,12 @@ func (g *golory) initRedis() {
 	}
 }
 
-func (g *golory) initMySql() {
-	if g.cfg.Golory.MySql == nil {
+func (g *golory) initMySQL() {
+	if g.cfg.Golory.MySQL == nil {
 		return
 	}
-	for key, cfg := range g.cfg.Golory.MySql {
+	for key, cfg := range g.cfg.Golory.MySQL {
 		c := mysql.Boot(cfg)
-		g.components.setMySql(key, c)
+		g.components.setMySQL(key, c)
 	}
 }

@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package mysql
+package mysql_test
 
 import (
 	"fmt"
-	"testing"
+	"github.com/1pb-club/golory/components/mysql"
 )
 
 type User struct {
@@ -25,18 +25,18 @@ type User struct {
 	Password string
 }
 
-func TestBoot(t *testing.T) {
-	cfg := CommonCfg{
-		UserName:      "travis",
-		PassWord:      "",
+func ExampleBoot() {
+	cfg := mysql.CommonCfg{
+		Username:      "travis",
+		Password:      "",
 		Addr:          "127.0.0.1:3306",
-		Name:          "myapp_test",
+		Name:          "golory",
 		SingularTable: true,
 	}
-	db := Boot(cfg)
+	db := mysql.Boot(cfg)
 	if db.ConnectionErr != nil {
-		t.Errorf("Connection to database failed，error : %v \n", db.ConnectionErr)
+		fmt.Printf("Connection to database failed，error : %v \n", db.ConnectionErr)
 		return
 	}
-	fmt.Println("Successful connection to database.")
+	fmt.Println("Successful connection to database.", db)
 }
