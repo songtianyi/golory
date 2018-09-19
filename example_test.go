@@ -48,11 +48,11 @@ func ExampleLogger() {
 		fmt.Printf("boot golory failed, %s", err)
 	}
 
-	// TODO
-	fmt.Println(golory.Logger("golory"))
-	fmt.Println(golory.Logger("default"))
+	fmt.Println(golory.Logger("golory") == nil)
+	fmt.Println(golory.Logger("default") == nil)
 	// Output:
-	// <nil>
+	// false
+	// false
 }
 
 func ExampleRedis() {
@@ -66,10 +66,11 @@ func ExampleRedis() {
 	if err := golory.Boot([]byte(cfg)); err != nil {
 		fmt.Printf("boot golory failed, %s", err)
 	}
-	// TODO
-	fmt.Println(golory.Redis("default"))
+	fmt.Println(golory.Redis("default") == nil)
+	fmt.Println(golory.Redis("no-this-user") == nil)
 	// Output:
-	// <nil>
+	// false
+	// true
 
 }
 
