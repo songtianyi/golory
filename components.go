@@ -24,7 +24,7 @@ func Logger(name string) *log.Logger {
 	return gly.components.getLogger(name)
 }
 
-// Redis do nothing
+// Redis return a redis.Client by name
 func Redis(name string) *redis.Client {
 	return gly.components.getRedis(name)
 }

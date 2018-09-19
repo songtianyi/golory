@@ -39,9 +39,12 @@ type golory struct {
 
 // goloryConfig is used to store golory configurations.
 type goloryConfig struct {
-	Debug     bool
-	Loggers   map[string]log.CommonCfg
-	RedisOpts map[string]redis.CommonCfg
+	// golory namespace
+	Golory struct {
+		Debug  bool
+		Logger map[string]log.CommonCfg
+		Redis  map[string]redis.CommonCfg
+	}
 }
 
 func init() {
@@ -71,6 +74,7 @@ func Boot(cfg interface{}) error {
 	default:
 		return fmt.Errorf("only string or []byte supported, %s", cfg)
 	}
+
 	// do initiation
 	gly.init()
 	gly.booted = true
@@ -96,7 +100,7 @@ func parseBytes(b []byte) error {
 }
 
 // Do parse config.
-// It will try serveral formats one by one.
+// It will try several formats one by one.
 func parseCfg(b []byte) error {
 	// try file formats
 	var err error
@@ -117,24 +121,28 @@ func parseCfg(b []byte) error {
 // Init all components
 func (g *golory) init() {
 	g.initLog()
+	g.initRedis()
 }
 
 // Init log component
 func (g *golory) initLog() {
-	if g.cfg.Loggers == nil {
+	if g.cfg.Golory.Logger == nil {
+		// empty map
 		return
 	}
-	for key, cfg := range g.cfg.Loggers {
+
+	for key, cfg := range g.cfg.Golory.Logger {
 		logger := log.Boot(cfg)
 		g.components.setLogger(key, logger)
 	}
 }
 
 func (g *golory) initRedis() {
-	if g.cfg.RedisOpts == nil {
+	if g.cfg.Golory.Redis == nil {
+		// empty map
 		return
 	}
-	for key, cfg := range g.cfg.RedisOpts {
+	for key, cfg := range g.cfg.Golory.Redis {
 		c := redis.Boot(cfg)
 		g.components.setRedis(key, c)
 	}
