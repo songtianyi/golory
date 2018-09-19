@@ -82,7 +82,7 @@ func parseBytes(b []byte) error {
 }
 
 // Do parse config.
-// It will try serveral formats one by one.
+// It will try several formats one by one.
 func parseCfg(b []byte) error {
 	// try file formats
 	var err error
