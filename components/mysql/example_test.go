@@ -12,25 +12,31 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package golory
+package mysql_test
 
 import (
-	"github.com/1pb-club/golory/components/log"
+	"fmt"
 	"github.com/1pb-club/golory/components/mysql"
-	"github.com/1pb-club/golory/components/redis"
 )
 
-// Logger return a log.Logger by name
-func Logger(name string) *log.Logger {
-	return gly.components.getLogger(name)
+type User struct {
+	ID       int
+	Username string
+	Password string
 }
 
-// Redis return a redis.Client by name
-func Redis(name string) *redis.Client {
-	return gly.components.getRedis(name)
-}
-
-// MySQL return a mysql.DB by name
-func MySQL(name string) *mysql.DB {
-	return gly.components.getMySQL(name)
+func ExampleBoot() {
+	cfg := mysql.CommonCfg{
+		Username:      "travis",
+		Password:      "",
+		Addr:          "127.0.0.1:3306",
+		Name:          "golory",
+		SingularTable: true,
+	}
+	db := mysql.Boot(cfg)
+	if db.ConnectionErr != nil {
+		fmt.Printf("Connection to database failed，error : %v \n", db.ConnectionErr)
+		return
+	}
+	fmt.Println("Successful connection to database.", db)
 }

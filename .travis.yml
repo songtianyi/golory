@@ -7,6 +7,7 @@ go:
 
 services:
     - redis-server
+    - mysql
 
 install:
     - go get -u golang.org/x/lint/golint
@@ -18,3 +19,5 @@ script:
     - go get ./...
     - go test -v ./...
 
+before_install:
+  - mysql -e 'CREATE DATABASE golory;'
