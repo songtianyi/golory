@@ -73,3 +73,22 @@ func ExampleRedis() {
 	// true
 
 }
+
+func ExampleMySQL() {
+	cfg := `
+	[golory]
+		[golory.mysql.default]
+		Username = "travis"
+		Password = ""
+		Addr = "127.0.0.1:3306"
+		Name = "golory"
+		SingularTable = true
+	`
+	if err := golory.Boot([]byte(cfg)); err != nil {
+		fmt.Printf("boot golory failed, %s", err)
+	}
+	// TODO
+	fmt.Println(golory.MySQL("default").ConnectionErr == nil)
+	// Output:
+	// true
+}
