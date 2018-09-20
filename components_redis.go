@@ -12,19 +12,29 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package redis_test
+package golory
 
 import (
-	"fmt"
-	"github.com/1pb-club/golory/components/redis"
+	gredis "github.com/go-redis/redis"
 )
 
-func ExampleBoot() {
-	c := redis.Boot(redis.CommonCfg{
-		Addr: "127.0.0.1:6379",
-	})
-	n, err := c.Exists("4774EF3B-F3B8-4D17-AB18-AC39AB7B4329-s").Result()
-	fmt.Printf("%d:%v", n, err)
-	// Output:
-	// 0:<nil>
+// CommonCfg wrapped go-redis options and some other golory options
+type RedisCfg struct {
+	Addr string
+	// TODO cluster options
+	// TODO logger option?
+}
+
+// Client wrapped go-redis RedisClient
+type RedisClient struct {
+	*gredis.Client
+}
+
+// Boot return a *redis.Client
+func RedisBoot(cfg RedisCfg) *RedisClient {
+	return &RedisClient{
+		gredis.NewClient(&gredis.Options{
+			Addr: cfg.Addr,
+		}),
+	}
 }
