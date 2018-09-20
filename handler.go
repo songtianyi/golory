@@ -14,48 +14,42 @@
 
 package golory
 
-import (
-	"github.com/1pb-club/golory/components/log"
-	"github.com/1pb-club/golory/components/mysql"
-	"github.com/1pb-club/golory/components/redis"
-)
-
 type handler struct {
-	loggers      map[string]*log.Logger
-	redisClients map[string]*redis.Client
-	mySQLDb      map[string]*mysql.DB
+	loggers      map[string]*LoggerClient
+	redisClients map[string]*RedisClient
+	mySQLDb      map[string]*MySQLClient
 }
 
 func newHandler() *handler {
 	return &handler{
-		loggers:      make(map[string]*log.Logger),
-		redisClients: make(map[string]*redis.Client),
-		mySQLDb:      make(map[string]*mysql.DB),
+		loggers:      make(map[string]*LoggerClient),
+		redisClients: make(map[string]*RedisClient),
+		mySQLDb:      make(map[string]*MySQLClient),
 	}
 }
-func (s *handler) setLogger(k string, v *log.Logger) {
+func (s *handler) setLogger(k string, v *LoggerClient) {
 	s.loggers[k] = v
 }
 
-func (s *handler) getLogger(k string) *log.Logger {
+func (s *handler) getLogger(k string) *LoggerClient {
 	l := s.loggers[k]
 	return l
 }
 
-func (s *handler) setRedis(k string, v *redis.Client) {
+func (s *handler) setRedis(k string, v *RedisClient) {
 	s.redisClients[k] = v
 }
 
-func (s *handler) getRedis(k string) *redis.Client {
+func (s *handler) getRedis(k string) *RedisClient {
 	c := s.redisClients[k]
 	return c
 }
 
-func (s *handler) setMySQL(k string, v *mysql.DB) {
+func (s *handler) setMySQL(k string, v *MySQLClient) {
 	s.mySQLDb[k] = v
 }
 
-func (s *handler) getMySQL(k string) *mysql.DB {
+func (s *handler) getMySQL(k string) *MySQLClient {
 	c := s.mySQLDb[k]
 	return c
 }

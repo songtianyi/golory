@@ -19,16 +19,19 @@ package golory
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/1pb-club/golory/components/log"
-	"github.com/1pb-club/golory/components/mysql"
-	"github.com/1pb-club/golory/components/redis"
 	"github.com/BurntSushi/toml"
 	"github.com/go-yaml/yaml"
 	"io/ioutil"
 )
 
 var (
-	gly *golory
+	gly                       *golory
+	glyLogger                 *LoggerClient
+	goloryDefaultLoggerConfig = LoggerCfg{
+		Debug: true,
+		Level: "info",
+		Path:  "./golory.log",
+	}
 )
 
 // golory struct is used to hold all data.
@@ -43,9 +46,9 @@ type goloryConfig struct {
 	// golory namespace
 	Golory struct {
 		Debug  bool
-		Logger map[string]log.CommonCfg
-		Redis  map[string]redis.CommonCfg
-		MySQL  map[string]mysql.CommonCfg
+		Logger map[string]LoggerCfg
+		Redis  map[string]RedisCfg
+		MySQL  map[string]MySQLCfg
 	}
 }
 
@@ -122,22 +125,45 @@ func parseCfg(b []byte) error {
 
 // Init all components
 func (g *golory) init() {
-	g.initLog()
+	g.initGoloryLog()
+	debugLog("config",fmt.Sprintf("%v",g.cfg))
+	g.initLogger()
 	g.initRedis()
 	g.initMySQL()
 }
 
+func (g *golory) initGoloryLog() {
+	// user don't set logger config
+	if g.cfg.Golory.Logger == nil {
+		glyLogger = LoggerBoot(goloryDefaultLoggerConfig)
+	} else {
+		// user set logger config, but not set golory logger config
+		if goloryConfigFromFile, ok := g.cfg.Golory.Logger["golory"]; !ok {
+			glyLogger = LoggerBoot(goloryDefaultLoggerConfig)
+		} else {
+			fmt.Println(111)
+			glyLogger = LoggerBoot(goloryConfigFromFile)
+		}
+	}
+}
+
 // Init log component
-func (g *golory) initLog() {
+func (g *golory) initLogger() {
 	if g.cfg.Golory.Logger == nil {
 		// empty map
 		return
 	}
 
+	debugLog("logger","init start")
 	for key, cfg := range g.cfg.Golory.Logger {
-		logger := log.Boot(cfg)
+		// user can't use system logger
+		if key == "golory" {
+			continue
+		}
+		logger := LoggerBoot(cfg)
 		g.components.setLogger(key, logger)
 	}
+	debugLog("logger","init end")
 }
 
 func (g *golory) initRedis() {
@@ -145,18 +171,23 @@ func (g *golory) initRedis() {
 		// empty map
 		return
 	}
+	debugLog("redis","init start")
 	for key, cfg := range g.cfg.Golory.Redis {
-		c := redis.Boot(cfg)
+		c := RedisBoot(cfg)
 		g.components.setRedis(key, c)
 	}
+	debugLog("redis","init end")
 }
 
 func (g *golory) initMySQL() {
 	if g.cfg.Golory.MySQL == nil {
 		return
 	}
+	debugLog("mysql","init start")
 	for key, cfg := range g.cfg.Golory.MySQL {
-		c := mysql.Boot(cfg)
+		c := MySQLBoot(cfg)
 		g.components.setMySQL(key, c)
 	}
+	debugLog("mysql","init end")
+
 }

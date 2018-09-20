@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// golory log component
-package log
+// Package golory is something
+package golory
 
 import (
 	"encoding/json"
@@ -23,20 +23,21 @@ import (
 	"log"
 )
 
-// Common logger configurations
-type CommonCfg struct {
+// LoggerCfg configurations
+type LoggerCfg struct {
 	Debug bool
 	Level string
 	Path  string
 }
 
+// LoggerClient is wrap zapper
 // TODO: for dynamic config & enrich log api
-type Logger struct {
+type LoggerClient struct {
 	*zap.Logger
 }
 
-// Initiate logger from config
-func Boot(cfg CommonCfg) *Logger {
+// LoggerBoot logger from config
+func LoggerBoot(cfg LoggerCfg) *LoggerClient {
 	var js string
 	if cfg.Debug {
 		js = fmt.Sprintf(`{
@@ -65,6 +66,6 @@ func Boot(cfg CommonCfg) *Logger {
 	if err != nil {
 		log.Fatal("init logger error: ", err)
 	}
-	return &Logger{l}
+	return &LoggerClient{l}
 
 }

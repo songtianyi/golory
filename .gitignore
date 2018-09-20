@@ -5,4 +5,7 @@
 # log
 log/*.log
 components/log/*.log
+*.log
 
+# example test
+example

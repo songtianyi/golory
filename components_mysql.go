@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package mysql
+package golory
 
 import (
 	"bytes"
@@ -22,13 +22,13 @@ import (
 )
 
 // DB contains information for current db connection
-type DB struct {
+type MySQLClient struct {
 	*gorm.DB
 	ConnectionErr error
 }
 
 //  CommonCfg  params
-type CommonCfg struct {
+type MySQLCfg struct {
 	Type        string                 // database type defult: mysql
 	Username    string                 // database username
 	Password    string                 // database password
@@ -41,7 +41,7 @@ type CommonCfg struct {
 }
 
 // Boot  Connection db return mysql.DB
-func Boot(cfg CommonCfg) *DB {
+func MySQLBoot(cfg MySQLCfg) *MySQLClient {
 	if cfg.Type == "" {
 		cfg.Type = "mysql"
 	}
@@ -69,7 +69,7 @@ func Boot(cfg CommonCfg) *DB {
 	}
 	db, err := gorm.Open(cfg.Type, buf.String())
 	if err != nil {
-		return &DB{nil, err}
+		return &MySQLClient{nil, err}
 	}
 	// TODO table prefix config ?
 	gorm.DefaultTableNameHandler = func(db *gorm.DB, defaultTableName string) string {
@@ -78,10 +78,10 @@ func Boot(cfg CommonCfg) *DB {
 	// 全局禁用表名复数
 	db.SingularTable(cfg.SingularTable)
 
-	return &DB{db, nil}
+	return &MySQLClient{db, nil}
 }
 
 // close db connection
-func (db *DB) Close() {
+func (db *MySQLClient) Close() {
 	db.Close()
 }
