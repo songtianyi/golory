@@ -191,3 +191,13 @@ func (g *golory) initMySQL() {
 	debugLog("mysql","init end")
 
 }
+
+func (g *golory) initMySQL() {
+	if g.cfg.Golory.MySQL == nil {
+		return
+	}
+	for key, cfg := range g.cfg.Golory.MySQL {
+		c := mysql.Boot(cfg)
+		g.components.setMySQL(key, c)
+	}
+}
