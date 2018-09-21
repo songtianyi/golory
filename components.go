@@ -14,23 +14,17 @@
 
 package golory
 
-import (
-	"github.com/1pb-club/golory/components/log"
-	"github.com/1pb-club/golory/components/mysql"
-	"github.com/1pb-club/golory/components/redis"
-)
-
 // Logger return a log.Logger by name
-func Logger(name string) *log.Logger {
+func Logger(name string) *LoggerClient {
 	return gly.components.getLogger(name)
 }
 
 // Redis return a redis.Client by name
-func Redis(name string) *redis.Client {
+func Redis(name string) *RedisClient {
 	return gly.components.getRedis(name)
 }
 
 // MySQL return a mysql.DB by name
-func MySQL(name string) *mysql.DB {
+func MySQL(name string) *MySQLClient {
 	return gly.components.getMySQL(name)
 }
