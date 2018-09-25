@@ -17,27 +17,35 @@ package golory
 import (
 	"bytes"
 	"fmt"
+	"time"
+
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
 )
 
-// DB contains information for current db connection
+// MySQLClient contains information for current db connection
 type MySQLClient struct {
 	*gorm.DB
 	ConnectionErr error
 }
 
-//  CommonCfg  params
+//  MySQLCfg  params
 type MySQLCfg struct {
-	Type        string                 // database type defult: mysql
-	Username    string                 // database username
-	Password    string                 // database password
-	Name        string                 // database name
-	Addr        string                 // database addr
-	TablePrefix string                 // database table prefix
-	Dsn         map[string]interface{} //  mysql suffix dsn params
+	Debug    bool
+	Type     string                 // Database type defult: mysql
+	Username string                 // Database Username
+	Password string                 // Database Password (requires User)
+	Net      string                 // Database Network type
+	Addr     string                 // Database Network address (requires Net)
+	DBName   string                 // Database name
+	Params   map[string]interface{} //  mysql suffix params ，See in detail：https://github.com/go-sql-driver/mysql#parameters
 
-	SingularTable bool
+	TablePrefix string // database table prefix
+
+	SingularTable bool          // Disable table name's pluralization globally
+	MaxOpenConn   int           // Maximum connection of database
+	MaxIdleConn   int           // Maximum idle connection number of database
+	MaxLifetime   time.Duration // The maximum time of a single connection in a database
 }
 
 // Boot  Connection db return mysql.DB
@@ -45,9 +53,7 @@ func MySQLBoot(cfg MySQLCfg) *MySQLClient {
 	if cfg.Type == "" {
 		cfg.Type = "mysql"
 	}
-	if cfg.TablePrefix == "" {
-		cfg.TablePrefix = "golory_"
-	}
+
 	var buf bytes.Buffer
 	buf.WriteString(cfg.Username)
 	buf.WriteString(":")
@@ -55,12 +61,12 @@ func MySQLBoot(cfg MySQLCfg) *MySQLClient {
 	buf.WriteString("@tcp(")
 	buf.WriteString(cfg.Addr)
 	buf.WriteString(")/")
-	buf.WriteString(cfg.Name)
+	buf.WriteString(cfg.DBName)
 	buf.WriteString("?")
-	if len(cfg.Dsn) <= 0 {
+	if len(cfg.Params) <= 0 {
 		buf.WriteString("charset=utf8&parseTime=True&loc=Local")
 	} else {
-		for k, v := range cfg.Dsn {
+		for k, v := range cfg.Params {
 			buf.WriteString(k)
 			buf.WriteString("=")
 			buf.WriteString(fmt.Sprintf("%s", v))
@@ -71,12 +77,25 @@ func MySQLBoot(cfg MySQLCfg) *MySQLClient {
 	if err != nil {
 		return &MySQLClient{nil, err}
 	}
+	db.LogMode(cfg.Debug)
+	if cfg.TablePrefix == "" {
+		cfg.TablePrefix = "golory_" // defalt table prefix
+	}
 	// TODO table prefix config ?
 	gorm.DefaultTableNameHandler = func(db *gorm.DB, defaultTableName string) string {
 		return cfg.TablePrefix + defaultTableName
 	}
-	// 全局禁用表名复数
 	db.SingularTable(cfg.SingularTable)
+
+	if cfg.MaxLifetime != 0 {
+		db.DB().SetConnMaxLifetime(cfg.MaxLifetime)
+	}
+	if cfg.MaxOpenConn != 0 {
+		db.DB().SetMaxOpenConns(cfg.MaxOpenConn)
+	}
+	if cfg.MaxIdleConn != 0 {
+		db.DB().SetMaxIdleConns(cfg.MaxIdleConn)
+	}
 
 	return &MySQLClient{db, nil}
 }

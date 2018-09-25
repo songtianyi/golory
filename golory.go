@@ -126,7 +126,7 @@ func parseCfg(b []byte) error {
 // Init all components
 func (g *golory) init() {
 	g.initGoloryLog()
-	debugLog("config",fmt.Sprintf("%v",g.cfg))
+	debugLog("config", fmt.Sprintf("%v", g.cfg))
 	g.initLogger()
 	g.initRedis()
 	g.initMySQL()
@@ -154,7 +154,7 @@ func (g *golory) initLogger() {
 		return
 	}
 
-	debugLog("logger","init start")
+	debugLog("logger", "init start")
 	for key, cfg := range g.cfg.Golory.Logger {
 		// user can't use system logger
 		if key == "golory" {
@@ -163,7 +163,7 @@ func (g *golory) initLogger() {
 		logger := LoggerBoot(cfg)
 		g.components.setLogger(key, logger)
 	}
-	debugLog("logger","init end")
+	debugLog("logger", "init end")
 }
 
 func (g *golory) initRedis() {
@@ -171,33 +171,23 @@ func (g *golory) initRedis() {
 		// empty map
 		return
 	}
-	debugLog("redis","init start")
+	debugLog("redis", "init start")
 	for key, cfg := range g.cfg.Golory.Redis {
 		c := RedisBoot(cfg)
 		g.components.setRedis(key, c)
 	}
-	debugLog("redis","init end")
+	debugLog("redis", "init end")
 }
 
 func (g *golory) initMySQL() {
 	if g.cfg.Golory.MySQL == nil {
 		return
 	}
-	debugLog("mysql","init start")
+	debugLog("mysql", "init start")
 	for key, cfg := range g.cfg.Golory.MySQL {
 		c := MySQLBoot(cfg)
 		g.components.setMySQL(key, c)
 	}
-	debugLog("mysql","init end")
+	debugLog("mysql", "init end")
 
-}
-
-func (g *golory) initMySQL() {
-	if g.cfg.Golory.MySQL == nil {
-		return
-	}
-	for key, cfg := range g.cfg.Golory.MySQL {
-		c := mysql.Boot(cfg)
-		g.components.setMySQL(key, c)
-	}
 }
