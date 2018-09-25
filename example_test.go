@@ -13,6 +13,7 @@
 //// limitations under the License.
 //
 package golory_test
+
 //
 //import (
 //	"fmt"
@@ -78,11 +79,17 @@ package golory_test
 //	cfg := `
 //	[golory]
 //		[golory.mysql.default]
-//		Username = "travis"
-//		Password = ""
-//		Addr = "127.0.0.1:3306"
-//		Name = "golory"
-//		SingularTable = true
+//        debug = true
+// 		  username = "travis"
+// 		  password = ""
+// 		  addr = "127.0.0.1:3306"
+// 		  dbname = "golory"
+// 		  params = {charset="utf8",parseTime="True",loc="Local"}
+// 		  singularTable = true
+// 		  tableprefix = "golory_"
+// 		  maxopenconn = 10
+// 		  maxidleConn = 10
+// 		  maxlifetime = 10
 //	`
 //	if err := golory.Boot([]byte(cfg)); err != nil {
 //		fmt.Printf("boot golory failed, %s", err)
