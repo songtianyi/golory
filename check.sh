@@ -9,7 +9,8 @@ set -o errexit -o nounset
 # check license header
 function checkLicense() {
     file=$1
+	echo $file
 	if ! grep -q 'LICENSE-2.0' $file; then echo no license header in $file, run addlicense.sh to add; exit 1;fi
 }
 export -f checkLicense
-find . -name \*.go | xargs sh -c "checkLicense"
+find . -name \*.go | xargs -n 1 -P 10 -I {} sh -c 'checkLicense "$@"' _ {}
