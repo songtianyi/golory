@@ -17,7 +17,7 @@ install:
     - go install golang.org/x/lint/golint
 
 script:
-    - "sh check.sh"
+    - "bash -x check.sh"
     - "golint ."
     - go get -t ./...
     - go test -v ./...
