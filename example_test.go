@@ -78,17 +78,13 @@ func ExampleMySQL() {
 	cfg := `
 	[golory]
 		[golory.mysql.default]
-          debug = true
+          debug = false
 		  username = "travis"
 		  password = ""
 		  addr = "127.0.0.1:3306"
-		  dbname = "golory"
+		  DBName = "golory"
 		  params = {charset="utf8",parseTime="True",loc="Local"}
 		  singularTable = true
-		  tableprefix = "golory_"
-		  maxopenconn = 10
-		  maxidleConn = 10
-		  maxlifetime = 10
 	`
 	if err := golory.Boot([]byte(cfg)); err != nil {
 		fmt.Printf("boot golory failed, %s", err)
