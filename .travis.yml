@@ -5,13 +5,20 @@ go:
     - 1.10.x
     - 1.11.x
 
+services:
+    - redis-server
+    - mysql
+
+before_install:
+  - mysql -e 'CREATE DATABASE golory;'
+
 install:
     - go get -u golang.org/x/lint/golint
     - go install golang.org/x/lint/golint
 
 script:
-    - "sh check.sh"
+    - "bash -x check.sh"
     - "golint ."
-    - go get ./...
-    - go test ./...
+    - go get -t ./...
+    - go test -v ./...
 

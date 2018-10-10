@@ -15,16 +15,26 @@
 package golory
 
 import (
-	"fmt"
+	gredis "github.com/go-redis/redis"
 )
 
-// Exported errors
-var (
-	// Error occurred when parse configuration
-	ErrParseCfg = fmt.Errorf("parse cfg failed")
-)
+// CommonCfg wrapped go-redis options and some other golory options
+type RedisCfg struct {
+	Addr string
+	// TODO cluster options
+	// TODO logger option?
+}
 
-// Join strings
-func wrap(e error, cause error) error {
-	return fmt.Errorf("%s, %s", e.Error(), cause.Error())
+// Client wrapped go-redis RedisClient
+type RedisClient struct {
+	*gredis.Client
+}
+
+// Boot return a *redis.Client
+func RedisBoot(cfg RedisCfg) *RedisClient {
+	return &RedisClient{
+		gredis.NewClient(&gredis.Options{
+			Addr: cfg.Addr,
+		}),
+	}
 }
