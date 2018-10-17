@@ -26,7 +26,7 @@ info(){
     all_source_code=$(find . -name "*[.sh|.go]" -type f | xargs cat | wc -l)
     echo "Total source code lines:$all_source_code."
 
-    # bug:can't recognize /** */
+    # TODO:can't recognize /** */
     annotation=$(find . -name "*[.sh|.go]" -type f | xargs cat |grep -e ^\s*\/\/.*$ -e ^\# |wc -l)
     echo "Total annotating code lines:$annotation."
 
