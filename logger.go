@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// Package golory is something
 package golory
 
 import (
@@ -30,14 +29,14 @@ type LoggerCfg struct {
 	Path  string
 }
 
-// LoggerClient is wrap zapper
-// TODO: for dynamic config & enrich log api
+// LoggerClient wrapped zapper
+// TODO: for dynamic config & more log api
 type LoggerClient struct {
 	*zap.Logger
 }
 
 // LoggerBoot logger from config
-func LoggerBoot(cfg LoggerCfg) *LoggerClient {
+func (cfg *LoggerCfg) init() *LoggerClient {
 	var js string
 	if cfg.Debug {
 		js = fmt.Sprintf(`{

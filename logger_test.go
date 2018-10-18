@@ -12,16 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package golory_test
+package golory
 
 import (
-	"github.com/1pb-club/golory"
 	. "github.com/smartystreets/goconvey/convey"
 	"os"
 	"testing"
 )
 
-func TestLogger_ParseValidConfig(t *testing.T) {
+func TestLogger_ParseConfig(t *testing.T) {
 	cfg := `
 		[golory]
 		debug = true
@@ -34,22 +33,24 @@ func TestLogger_ParseValidConfig(t *testing.T) {
     		level = "info"
     		path = "default.log"
 	`
-	Convey("解析配置：", t, func() {
+	Convey("Parse logger cfg:", t, func() {
 		So(
-			golory.Boot([]byte(cfg)),
+			Boot([]byte(cfg)),
 			ShouldBeNil,
 		)
 	})
 }
 
-func TestLogger_LogInfo(t *testing.T) {
-	path := "golory.log"
-	Convey("写日志：", t, func() {
-		logger := golory.LoggerBoot(golory.LoggerCfg{
+func TestLogger_WriteLog(t *testing.T) {
+	path := "TestLogger_WriteLog.log"
+	Convey("Write log", t, func() {
+
+		cfg := LoggerCfg{
 			Debug: false,
 			Level: "INFO",
-			Path:  "golory.log",
-		})
+			Path:  "TestLogger_WriteLog.log",
+		}
+		logger := cfg.init()
 		logger.Info("something")
 		isExist := false
 		if _, err := os.Stat(path); err == nil {
