@@ -15,26 +15,43 @@
 package golory
 
 import (
-	"github.com/go-redis/redis"
+	"fmt"
+	. "github.com/smartystreets/goconvey/convey"
+	"testing"
 )
 
-// RedisCfg wrapped go-redis options and some other golory options
-type RedisCfg struct {
-	Addr string
-	// TODO cluster options
-	// TODO logger option?
+func TestRedis_ParseConfig(t *testing.T) {
+	cfg := `
+	[golory]
+		[golory.redis.default]
+		  Addr = "127.0.0.1:6379"
+		[golory.redis.user]
+		  Addr = "127.0.0.1:6479"
+	`
+	Convey("Parse redis cfg:", t, func() {
+		So(
+			Boot([]byte(cfg)),
+			ShouldBeNil,
+		)
+	})
 }
 
-// RedisClient wrapped go-redis RedisClient
-type RedisClient struct {
-	*redis.Client
-}
-
-// init redis connection from redis config
-func (cfg *RedisCfg) init() *RedisClient {
-	return &RedisClient{
-		redis.NewClient(&redis.Options{
-			Addr: cfg.Addr,
-		}),
+func TestRedis_InitConn(t *testing.T) {
+	cfg1 := RedisCfg{
+		Addr: "127.0.0.1:6379",
 	}
+	cfg2 := RedisCfg{
+		Addr: "127.0.0.1:6380",
+	}
+	fmt.Println()
+	Convey("Init redis conn", t, func() {
+		So(
+			cfg1.init().Ping().Err(),
+			ShouldBeNil,
+		)
+		So(
+			cfg2.init().Ping().Err(),
+			ShouldNotBeNil,
+		)
+	})
 }
