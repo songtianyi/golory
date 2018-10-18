@@ -16,6 +16,7 @@ package golory
 
 import (
 	. "github.com/smartystreets/goconvey/convey"
+	"log"
 	"os"
 	"testing"
 )
@@ -55,6 +56,10 @@ func TestLogger_WriteLog(t *testing.T) {
 		isExist := false
 		if _, err := os.Stat(path); err == nil {
 			isExist = true
+			// remove it
+			if err := os.Remove(path); err != nil {
+				log.Printf("remove %s failed, %s\n", path, err)
+			}
 		}
 		So(
 			isExist,
