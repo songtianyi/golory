@@ -22,6 +22,7 @@ import (
 	"github.com/BurntSushi/toml"
 	"github.com/go-yaml/yaml"
 	"io/ioutil"
+	"reflect"
 )
 
 var (
@@ -77,7 +78,7 @@ func Boot(cfg interface{}) error {
 			return err
 		}
 	default:
-		return fmt.Errorf("only string or []byte supported, %s", cfg)
+		return fmt.Errorf("exepect string or []byte, but found %v", reflect.TypeOf(cfg))
 	}
 
 	// do initiation
@@ -141,7 +142,6 @@ func (g *golory) initGoloryLog() {
 		if goloryConfigFromFile, ok := g.cfg.Golory.Logger["golory"]; !ok {
 			glyLogger = LoggerBoot(goloryDefaultLoggerConfig)
 		} else {
-			fmt.Println(111)
 			glyLogger = LoggerBoot(goloryConfigFromFile)
 		}
 	}
@@ -173,7 +173,7 @@ func (g *golory) initRedis() {
 	}
 	debugLog("redis", "init start")
 	for key, cfg := range g.cfg.Golory.Redis {
-		c := RedisBoot(cfg)
+		c := cfg.init()
 		g.components.setRedis(key, c)
 	}
 	debugLog("redis", "init end")
@@ -185,7 +185,7 @@ func (g *golory) initMySQL() {
 	}
 	debugLog("mysql", "init start")
 	for key, cfg := range g.cfg.Golory.MySQL {
-		c := MySQLBoot(cfg)
+		c := cfg.init()
 		g.components.setMySQL(key, c)
 	}
 	debugLog("mysql", "init end")

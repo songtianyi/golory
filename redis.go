@@ -18,20 +18,20 @@ import (
 	gredis "github.com/go-redis/redis"
 )
 
-// CommonCfg wrapped go-redis options and some other golory options
+// RedisCfg wrapped go-redis options and some other golory options
 type RedisCfg struct {
 	Addr string
 	// TODO cluster options
 	// TODO logger option?
 }
 
-// Client wrapped go-redis RedisClient
+// RedisClient wrapped go-redis RedisClient
 type RedisClient struct {
 	*gredis.Client
 }
 
-// Boot return a *redis.Client
-func RedisBoot(cfg RedisCfg) *RedisClient {
+// init redis connection from redis config
+func (cfg *RedisCfg) init() *RedisClient {
 	return &RedisClient{
 		gredis.NewClient(&gredis.Options{
 			Addr: cfg.Addr,
