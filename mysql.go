@@ -19,6 +19,7 @@ import (
 	"fmt"
 	_ "github.com/go-sql-driver/mysql" // orm need this
 	"github.com/jinzhu/gorm"
+	"strings"
 	"time"
 )
 
@@ -65,12 +66,12 @@ func (cfg *MySQLCfg) init() *MySQLClient {
 	if len(cfg.Params) <= 0 {
 		buf.WriteString("charset=utf8&parseTime=True&loc=Local")
 	} else {
+		a := make([]string, 0)
 		for k, v := range cfg.Params {
-			buf.WriteString(k)
-			buf.WriteString("=")
-			buf.WriteString(fmt.Sprintf("%s", v))
-			buf.WriteString("&")
+			a = append(a, k)
+			a = append(a, fmt.Sprintf("=%s", v))
 		}
+		buf.WriteString(strings.Join(a, "&"))
 	}
 	db, err := gorm.Open(cfg.Type, buf.String())
 	if err != nil {
