@@ -22,10 +22,10 @@ import (
 func ExampleBoot() {
 	cfg := `
 	[golory]
-   	[golory.log.default]
-   		debug = true
-   		level = "info"
-   		path = "./default.log"
+   		[golory.logger.default]
+   			debug = true
+   			level = "info"
+   			path = "./default.log"
 	`
 	fmt.Println(golory.Boot([]byte(cfg)))
 	// Output:
@@ -35,14 +35,14 @@ func ExampleBoot() {
 func ExampleLogger() {
 	cfg := `
 		[golory]
-   	[golory.logger.golory]
-   		debug = true
-   		level = "error"
-   		path = "golory.log"
-		[golory.logger.default]
-   		debug = true
-   		level = "info"
-   		path = "default.log"
+   			[golory.logger.golory]
+   				debug = true
+   				level = "error"
+   				path = "golory.log"
+			[golory.logger.default]
+   				debug = true
+   				level = "info"
+   				path = "default.log"
 	`
 	if err := golory.Boot([]byte(cfg)); err != nil {
 		fmt.Printf("boot golory failed, %s", err)
@@ -89,7 +89,6 @@ func ExampleMySQL() {
 	if err := golory.Boot([]byte(cfg)); err != nil {
 		fmt.Printf("boot golory failed, %s", err)
 	}
-	// TODO
 	fmt.Println(golory.MySQL("default").ConnectionErr == nil)
 	// Output:
 	// true
