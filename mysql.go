@@ -17,6 +17,7 @@ package golory
 import (
 	"bytes"
 	"fmt"
+	_ "github.com/go-sql-driver/mysql" // orm need this
 	"github.com/jinzhu/gorm"
 	"time"
 )
@@ -76,9 +77,6 @@ func (cfg *MySQLCfg) init() *MySQLClient {
 		return &MySQLClient{nil, err}
 	}
 	db.LogMode(cfg.Debug)
-	if cfg.TablePrefix == "" {
-		cfg.TablePrefix = "golory_" // defalt table prefix
-	}
 	// TODO table prefix config ?
 	gorm.DefaultTableNameHandler = func(db *gorm.DB, defaultTableName string) string {
 		return cfg.TablePrefix + defaultTableName
