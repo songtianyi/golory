@@ -15,16 +15,17 @@
 package golory
 
 import (
+	"errors"
 	"fmt"
 )
 
 // Exported errors
 var (
 	// Error occurred when parse configuration
-	ErrParseCfg = fmt.Errorf("parse cfg failed")
+	ErrParseCfg = errors.New("parse cfg failed")
 )
 
-// Join strings
+// Join error strings
 func wrap(e error, cause error) error {
 	return fmt.Errorf("%s, %s", e.Error(), cause.Error())
 }
