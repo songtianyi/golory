@@ -68,8 +68,7 @@ func (cfg *MySQLCfg) init() *MySQLClient {
 	} else {
 		a := make([]string, 0)
 		for k, v := range cfg.Params {
-			a = append(a, k)
-			a = append(a, fmt.Sprintf("=%s", v))
+			a = append(a, fmt.Sprintf("%s=%s", k, v))
 		}
 		buf.WriteString(strings.Join(a, "&"))
 	}
