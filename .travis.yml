@@ -8,9 +8,11 @@ go:
 services:
     - redis-server
     - mysql
+    - postgresql
 
 before_install:
   - mysql -e 'CREATE DATABASE golory;'
+  - psql -c 'create database golory;' -U postgres
 
 install:
     - go get -u golang.org/x/lint/golint

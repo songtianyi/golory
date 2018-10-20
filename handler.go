@@ -17,14 +17,14 @@ package golory
 type handler struct {
 	loggers      map[string]*LoggerClient
 	redisClients map[string]*RedisClient
-	mySQLDb      map[string]*MySQLClient
+	mySQLDb      map[string]*GormClient
 }
 
 func newHandler() *handler {
 	return &handler{
 		loggers:      make(map[string]*LoggerClient),
 		redisClients: make(map[string]*RedisClient),
-		mySQLDb:      make(map[string]*MySQLClient),
+		mySQLDb:      make(map[string]*GormClient),
 	}
 }
 func (s *handler) setLogger(k string, v *LoggerClient) {
@@ -45,11 +45,11 @@ func (s *handler) getRedis(k string) *RedisClient {
 	return c
 }
 
-func (s *handler) setMySQL(k string, v *MySQLClient) {
+func (s *handler) setGrom(k string, v *GormClient) {
 	s.mySQLDb[k] = v
 }
 
-func (s *handler) getMySQL(k string) *MySQLClient {
+func (s *handler) getGorm(k string) *GormClient {
 	c := s.mySQLDb[k]
 	return c
 }

@@ -24,7 +24,7 @@ func Redis(name string) *RedisClient {
 	return gly.components.getRedis(name)
 }
 
-// MySQL return a mysql.DB by name
-func MySQL(name string) *MySQLClient {
-	return gly.components.getMySQL(name)
+// Gorm return a *GromClient by name
+func Gorm(name string) *GormClient {
+	return gly.components.getGorm(name)
 }
