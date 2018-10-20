@@ -32,7 +32,7 @@ type MySQLClient struct {
 // MySQLCfg is sql config struct
 type MySQLCfg struct {
 	Debug    bool
-	Type     string                 // Database type defult: mysql
+	Engine   string                 // Database type, default: mysql
 	Username string                 // Database Username
 	Password string                 // Database Password (requires User)
 	Net      string                 // Database Network type
@@ -50,8 +50,8 @@ type MySQLCfg struct {
 
 // init db connection from sql config
 func (cfg *MySQLCfg) init() *MySQLClient {
-	if cfg.Type == "" {
-		cfg.Type = "mysql"
+	if cfg.Engine == "" {
+		cfg.Engine = "mysql"
 	}
 
 	var buf bytes.Buffer
@@ -72,7 +72,7 @@ func (cfg *MySQLCfg) init() *MySQLClient {
 		}
 		buf.WriteString(strings.Join(a, "&"))
 	}
-	db, err := gorm.Open(cfg.Type, buf.String())
+	db, err := gorm.Open(cfg.Engine, buf.String())
 	if err != nil {
 		return &MySQLClient{nil, err}
 	}
