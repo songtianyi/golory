@@ -49,7 +49,7 @@ type goloryConfig struct {
 		Debug  bool
 		Logger map[string]LoggerCfg
 		Redis  map[string]RedisCfg
-		MySQL  map[string]MySQLCfg
+		Gorm   map[string]GormCfg
 	}
 }
 
@@ -149,22 +149,18 @@ func (g *golory) initRedis() {
 		// empty map
 		return
 	}
-	// debugLog("redis", "init start")
 	for key, cfg := range g.cfg.Golory.Redis {
 		c := cfg.init()
 		g.components.setRedis(key, c)
 	}
-	// debugLog("redis", "init end")
 }
 
 func (g *golory) initMySQL() {
-	if g.cfg.Golory.MySQL == nil {
+	if g.cfg.Golory.Gorm == nil {
 		return
 	}
-	// debugLog("mysql", "init start")
-	for key, cfg := range g.cfg.Golory.MySQL {
+	for key, cfg := range g.cfg.Golory.Gorm {
 		c := cfg.init()
-		g.components.setMySQL(key, c)
+		g.components.setGrom(key, c)
 	}
-	// debugLog("mysql", "init end")
 }

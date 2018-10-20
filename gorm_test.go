@@ -22,7 +22,7 @@ import (
 func TestMySQL_ParseConfig(t *testing.T) {
 	cfg := `
 	[golory]
-		[golory.mysql.default]
+		[golory.gorm.default]
           debug = false
 		  username = "travis"
 		  password = ""
@@ -40,7 +40,7 @@ func TestMySQL_ParseConfig(t *testing.T) {
 }
 
 func TestMySQL_InitConn(t *testing.T) {
-	cfg1 := MySQLCfg{
+	cfg1 := GormCfg{
 		Addr:     "127.0.0.1:3306",
 		Username: "travis",
 		Password: "",
@@ -48,7 +48,26 @@ func TestMySQL_InitConn(t *testing.T) {
 	}
 	Convey("Init mysql conn", t, func() {
 		So(
-			cfg1.init().ConnectionErr,
+			cfg1.init().Err,
+			ShouldBeNil,
+		)
+	})
+}
+
+func TestPostgres_InitConn(t *testing.T) {
+	cfg1 := GormCfg{
+		Addr:     "127.0.0.1:5432",
+		Username: "postgres",
+		Password: "",
+		DBName:   "travis",
+		Engine:   "postgres",
+		Params: map[string]interface{}{
+			"sslmode": "disable",
+		},
+	}
+	Convey("Init postgres conn", t, func() {
+		So(
+			cfg1.init().Err,
 			ShouldBeNil,
 		)
 	})

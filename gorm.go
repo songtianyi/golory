@@ -17,20 +17,21 @@ package golory
 import (
 	"bytes"
 	"fmt"
-	_ "github.com/go-sql-driver/mysql" // orm need this
+	_ "github.com/go-sql-driver/mysql" // mysql driver
 	"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/postgres" // postgres driver
 	"strings"
 	"time"
 )
 
-// MySQLClient contains information for current db connection
-type MySQLClient struct {
+// GormClient contains information for current db connection
+type GormClient struct {
 	*gorm.DB
-	ConnectionErr error
+	Err error
 }
 
-// MySQLCfg is sql config struct
-type MySQLCfg struct {
+// GormCfg is sql config struct
+type GormCfg struct {
 	Debug    bool
 	Engine   string                 // Database type, default: mysql
 	Username string                 // Database Username
@@ -49,32 +50,59 @@ type MySQLCfg struct {
 }
 
 // init db connection from sql config
-func (cfg *MySQLCfg) init() *MySQLClient {
+func (cfg *GormCfg) init() *GormClient {
 	if cfg.Engine == "" {
+		// default engine
 		cfg.Engine = "mysql"
 	}
 
+	pa := make([]string, 0)
+	for k, v := range cfg.Params {
+		pa = append(pa, fmt.Sprintf("%s=%s", k, v))
+	}
+
 	var buf bytes.Buffer
-	buf.WriteString(cfg.Username)
-	buf.WriteString(":")
-	buf.WriteString(cfg.Password)
-	buf.WriteString("@tcp(")
-	buf.WriteString(cfg.Addr)
-	buf.WriteString(")/")
-	buf.WriteString(cfg.DBName)
-	buf.WriteString("?")
-	if len(cfg.Params) <= 0 {
-		buf.WriteString("charset=utf8&parseTime=True&loc=Local")
-	} else {
-		a := make([]string, 0)
-		for k, v := range cfg.Params {
-			a = append(a, fmt.Sprintf("%s=%s", k, v))
+	switch cfg.Engine {
+	case "mysql":
+		// user:password@tcp(host)/dbname?charset=utf8&parseTime=True&loc=Local
+		buf.WriteString(fmt.Sprintf("%s:%s@tcp(%s)/%s?",
+			cfg.Username,
+			cfg.Password,
+			cfg.Addr,
+			cfg.DBName))
+		if len(pa) == 0 {
+			// default params
+			buf.WriteString("charset=utf8&parseTime=True&loc=Local")
+		} else {
+			// user defined params
+			buf.WriteString(strings.Join(pa, "&"))
 		}
-		buf.WriteString(strings.Join(a, "&"))
+		break
+	case "postgres":
+		// host=myhost port=myport user=gorm dbname=gorm password=mypassword
+		hp := strings.Split(cfg.Addr, ":")
+		if len(hp) < 1 {
+			return &GormClient{nil, fmt.Errorf("addr %s invalid", cfg.Addr)}
+		}
+		buf.WriteString(fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s",
+			hp[0],
+			hp[1],
+			cfg.Username,
+			cfg.DBName,
+			cfg.Password))
+		if len(pa) > 0 {
+			buf.WriteString(" " + strings.Join(pa, " "))
+		}
+		break
+	default:
+		return &GormClient{
+			nil,
+			fmt.Errorf("engine %s not support", cfg.Engine),
+		}
 	}
 	db, err := gorm.Open(cfg.Engine, buf.String())
 	if err != nil {
-		return &MySQLClient{nil, err}
+		return &GormClient{nil, err}
 	}
 	db.LogMode(cfg.Debug)
 	// TODO table prefix config ?
@@ -93,10 +121,10 @@ func (cfg *MySQLCfg) init() *MySQLClient {
 		db.DB().SetMaxIdleConns(cfg.MaxIdleConn)
 	}
 
-	return &MySQLClient{db, nil}
+	return &GormClient{db, nil}
 }
 
 // Close sql client
-func (c *MySQLClient) Close() {
+func (c *GormClient) Close() {
 	c.Close()
 }

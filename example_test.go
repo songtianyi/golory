@@ -77,7 +77,7 @@ func ExampleRedis() {
 func ExampleMySQL() {
 	cfg := `
 	[golory]
-		[golory.mysql.default]
+		[golory.gorm.default]
           debug = false
 		  username = "travis"
 		  password = ""
@@ -89,7 +89,26 @@ func ExampleMySQL() {
 	if err := golory.Boot([]byte(cfg)); err != nil {
 		fmt.Printf("boot golory failed, %s", err)
 	}
-	fmt.Println(golory.MySQL("default").ConnectionErr == nil)
+	fmt.Println(golory.Gorm("default").Err == nil)
+	// Output:
+	// true
+}
+
+func ExamplePostgres() {
+	cfg := `
+	[golory]
+		[golory.gorm.default]
+          debug = false
+		  username = "travis"
+		  password = ""
+		  addr = "127.0.0.1:5432"
+		  DBName = "golory"
+		  singularTable = true
+	`
+	if err := golory.Boot([]byte(cfg)); err != nil {
+		fmt.Printf("boot golory failed, %s", err)
+	}
+	fmt.Println(golory.Gorm("default").Err == nil)
 	// Output:
 	// true
 }
