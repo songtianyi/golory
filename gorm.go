@@ -84,12 +84,12 @@ func (cfg *GormCfg) init() *GormClient {
 		if len(hp) < 1 {
 			return &GormClient{nil, fmt.Errorf("addr %s invalid", cfg.Addr)}
 		}
-		buf.WriteString(fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s",
+		buf.WriteString(fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s",
 			hp[0],
 			hp[1],
 			cfg.Username,
-			cfg.DBName,
-			cfg.Password))
+			cfg.Password,
+			cfg.DBName))
 		if len(pa) > 0 {
 			buf.WriteString(" " + strings.Join(pa, " "))
 		}
@@ -105,7 +105,6 @@ func (cfg *GormCfg) init() *GormClient {
 		return &GormClient{nil, err}
 	}
 	db.LogMode(cfg.Debug)
-	// TODO table prefix config ?
 	gorm.DefaultTableNameHandler = func(db *gorm.DB, defaultTableName string) string {
 		return cfg.TablePrefix + defaultTableName
 	}

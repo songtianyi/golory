@@ -99,11 +99,13 @@ func ExamplePostgres() {
 	[golory]
 		[golory.gorm.default]
           debug = false
-		  username = "travis"
-		  password = ""
+		  username = "golory"
+		  engine = "postgres"
+		  password = "golory"
 		  addr = "127.0.0.1:5432"
 		  DBName = "golory"
 		  singularTable = true
+		  params = {sslmode="disable"}
 	`
 	if err := golory.Boot([]byte(cfg)); err != nil {
 		fmt.Printf("boot golory failed, %s", err)

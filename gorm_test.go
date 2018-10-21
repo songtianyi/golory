@@ -46,7 +46,7 @@ func TestMySQL_InitConn(t *testing.T) {
 		Password: "",
 		DBName:   "golory",
 	}
-	Convey("Init mysql conn", t, func() {
+	Convey("Init mysql conn:", t, func() {
 		So(
 			cfg1.init().Err,
 			ShouldBeNil,
@@ -57,15 +57,15 @@ func TestMySQL_InitConn(t *testing.T) {
 func TestPostgres_InitConn(t *testing.T) {
 	cfg1 := GormCfg{
 		Addr:     "127.0.0.1:5432",
-		Username: "postgres",
-		Password: "",
-		DBName:   "travis",
+		Username: "golory",
+		Password: "golory",
+		DBName:   "golory",
 		Engine:   "postgres",
 		Params: map[string]interface{}{
 			"sslmode": "disable",
 		},
 	}
-	Convey("Init postgres conn", t, func() {
+	Convey("Init postgres conn:", t, func() {
 		So(
 			cfg1.init().Err,
 			ShouldBeNil,
