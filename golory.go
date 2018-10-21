@@ -128,7 +128,7 @@ func parseCfg(b []byte) error {
 func (g *golory) init() {
 	g.initLogger()
 	g.initRedis()
-	g.initMySQL()
+	g.initGorm()
 }
 
 // Init log component
@@ -155,7 +155,7 @@ func (g *golory) initRedis() {
 	}
 }
 
-func (g *golory) initMySQL() {
+func (g *golory) initGorm() {
 	if g.cfg.Golory.Gorm == nil {
 		return
 	}
