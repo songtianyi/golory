@@ -21,7 +21,7 @@ install:
 
 script:
     - "bash check.sh"
-    - "golint ."
+    - "golint ./..."
     - go get -t ./...
     - go test -v ./...
 
