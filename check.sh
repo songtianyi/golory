@@ -12,13 +12,29 @@ all_unformat_files(){
     gofmt -l .
 }
 
+lint(){
+	which golint > /dev/null
+	if [ $? -ne 0 ]; then
+		echo '[N] golint not installed.' >&2
+		exit 1
+	fi
+    count=$(golint ./... | wc -l)
+    if [ $count -eq 0 ];
+        then
+            echo "[Y] golint passed."
+    else
+        echo "[N] You have $count lint errors."
+		golint ./...
+    fi
+}
+
 info(){
     count=$(gofmt -l . | wc -l)
     if [ $count -eq 0 ];
         then
-            echo ">All go files have been formatted."
+            echo "[Y] All go files have been formatted."
     else
-        echo ">You have $count go file haven't been formatted:"
+        echo ">[N] You have $count go file haven't been formatted:"
         all_unformat_files
     fi
     echo "--------------------------------------"
@@ -33,6 +49,7 @@ info(){
     echo ">Tip:You can use 'gofmt -w .' to format all go files."
 }
 
+lint
 info
 
 
