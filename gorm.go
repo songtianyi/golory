@@ -17,16 +17,17 @@ package golory
 import (
 	"bytes"
 	"fmt"
+	"strings"
+	"time"
+
 	_ "github.com/go-sql-driver/mysql" // mysql driver
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres" // postgres driver
-	"strings"
-	"time"
 )
 
 // GormClient contains information for current db connection
 type GormClient struct {
-	*gorm.DB
+	DB  *gorm.DB
 	Err error
 }
 
