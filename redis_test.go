@@ -44,12 +44,14 @@ func TestRedis_InitConn(t *testing.T) {
 	}
 	Convey("Init redis conn", t, func() {
 		c, _ := cfg1.init()
-		So(c.Ping().Err(),
+		So(
+			c.Ping().Err(),
 			ShouldBeNil,
 		)
 		c.close()
 		c, _ = cfg2.init()
-		So(c.Ping().Err(),
+		So(
+			c.Ping().Err(),
 			ShouldNotBeNil,
 		)
 		c.close()
