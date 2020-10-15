@@ -78,7 +78,7 @@ func ExampleMySQL() {
 	cfg := `
 	[golory]
 		[golory.gorm.default]
-          debug = false
+          	  debug = false
 		  username = "travis"
 		  password = ""
 		  addr = "127.0.0.1:3306"
