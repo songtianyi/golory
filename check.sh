@@ -46,7 +46,7 @@ info(){
     annotation=$(find . -name "*[.sh|.go]" -type f | xargs cat |grep -e ^\s*\/\/.*$ -e ^\# |wc -l)
     echo "Total annotating code lines:$annotation."
 
-    echo ">Tip:You can use 'gofmt -w .' to format all go files."
+    echo ">Tip: You can use 'gofmt -w .' to format all go files."
 }
 
 lint
