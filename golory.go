@@ -18,9 +18,10 @@ package golory
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/BurntSushi/toml"
-	"github.com/go-yaml/yaml"
+	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"reflect"
 )
@@ -46,10 +47,11 @@ type golory struct {
 type goloryConfig struct {
 	// golory namespace
 	Golory struct {
-		Debug  bool
-		Logger map[string]LoggerCfg
-		Redis  map[string]RedisCfg
-		Gorm   map[string]GormCfg
+		Debug    bool
+		Logger   map[string]LoggerCfg
+		Redis    map[string]RedisCfg
+		Gorm     map[string]GormCfg
+		TDengine map[string]TDengineCfg `toml:"tdengine"`
 	}
 }
 
@@ -67,6 +69,7 @@ func Boot(cfg interface{}) error {
 	if gly.booted {
 		// TODO do clear stuff
 		gly.booted = false
+		// return errors.New("booted")
 	}
 	switch cfg.(type) {
 	case string:
@@ -82,9 +85,19 @@ func Boot(cfg interface{}) error {
 	}
 
 	// do initiation
-	gly.init()
+	if err := gly.init(); err != nil {
+		return fmt.Errorf("init golory failed: %s", err)
+	}
 	gly.booted = true
 	return nil
+}
+
+// Shutdown close components
+func Shutdown() error {
+	if !gly.booted {
+		return nil
+	}
+	return gly.components.closeAll()
 }
 
 // Initate golory components from file.
@@ -125,42 +138,71 @@ func parseCfg(b []byte) error {
 }
 
 // Init all components
-func (g *golory) init() {
-	g.initLogger()
-	g.initRedis()
-	g.initGorm()
+func (g *golory) init() error {
+	e := wrap(nil, g.initLogger())
+	e = wrap(e, g.initRedis())
+	e = wrap(e, g.initGorm())
+	e = wrap(e, g.initTDengine())
+	return e
 }
 
 // Init log component
-func (g *golory) initLogger() {
+func (g *golory) initLogger() error {
 	if g.cfg.Golory.Logger == nil {
 		// empty map
-		return
+		return nil
 	}
 
 	for key, cfg := range g.cfg.Golory.Logger {
-		logger := cfg.init()
+		logger, err := cfg.init()
+		if err != nil {
+			// fast fail
+			return wrap(errors.New("init logger error"), err)
+		}
 		g.components.setLogger(key, logger)
 	}
+	return nil
 }
 
-func (g *golory) initRedis() {
+func (g *golory) initRedis() error {
 	if g.cfg.Golory.Redis == nil {
 		// empty map
-		return
+		return nil
 	}
 	for key, cfg := range g.cfg.Golory.Redis {
-		c := cfg.init()
+		c, err := cfg.init()
+		if err != nil {
+			return wrap(errors.New("init redis error"), err)
+		}
 		g.components.setRedis(key, c)
 	}
+	return nil
 }
 
-func (g *golory) initGorm() {
+func (g *golory) initGorm() error {
 	if g.cfg.Golory.Gorm == nil {
-		return
+		return nil
 	}
 	for key, cfg := range g.cfg.Golory.Gorm {
-		c := cfg.init()
+		c, err := cfg.init()
+		if err != nil {
+			return wrap(errors.New("init gorm error"), err)
+		}
 		g.components.setGrom(key, c)
 	}
+	return nil
+}
+
+func (g *golory) initTDengine() error {
+	if g.cfg.Golory.TDengine == nil {
+		return nil
+	}
+	for key, cfg := range g.cfg.Golory.TDengine {
+		c, err := cfg.init()
+		if err != nil {
+			return wrap(errors.New("init tdengine error"), err)
+		}
+		g.components.setTDengine(key, c)
+	}
+	return nil
 }

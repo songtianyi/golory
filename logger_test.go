@@ -51,7 +51,11 @@ func TestLogger_WriteLog(t *testing.T) {
 			Level: "INFO",
 			Path:  "TestLogger_WriteLog.log",
 		}
-		logger := cfg.init()
+		logger, err := cfg.init()
+		So(
+			err,
+			ShouldBeNil,
+		)
 		logger.Info("something")
 		isExist := false
 		if _, err := os.Stat(path); err == nil {

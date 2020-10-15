@@ -16,7 +16,7 @@ package golory
 
 import (
 	"errors"
-	"fmt"
+	"strings"
 )
 
 // Exported errors
@@ -26,6 +26,15 @@ var (
 )
 
 // Join error strings
-func wrap(e error, cause error) error {
-	return fmt.Errorf("%s, %s", e.Error(), cause.Error())
+func wrap(e ...error) error {
+	errs := make([]string, 0)
+	for _, v := range e {
+		if v != nil {
+			errs = append(errs, v.Error())
+		}
+	}
+	if len(errs) < 1 {
+		return nil
+	}
+	return errors.New(strings.Join(errs, ": "))
 }

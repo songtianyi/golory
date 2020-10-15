@@ -27,8 +27,7 @@ import (
 
 // GormClient contains information for current db connection
 type GormClient struct {
-	DB  *gorm.DB
-	Err error
+	*gorm.DB
 }
 
 // GormCfg is sql config struct
@@ -51,7 +50,7 @@ type GormCfg struct {
 }
 
 // init db connection from sql config
-func (cfg *GormCfg) init() *GormClient {
+func (cfg *GormCfg) init() (*GormClient, error) {
 	if cfg.Engine == "" {
 		// default engine
 		cfg.Engine = "mysql"
@@ -83,7 +82,7 @@ func (cfg *GormCfg) init() *GormClient {
 		// host=myhost port=myport user=gorm dbname=gorm password=mypassword
 		hp := strings.Split(cfg.Addr, ":")
 		if len(hp) < 1 {
-			return &GormClient{nil, fmt.Errorf("addr %s invalid", cfg.Addr)}
+			return nil, fmt.Errorf("addr %s invalid", cfg.Addr)
 		}
 		buf.WriteString(fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s",
 			hp[0],
@@ -96,14 +95,11 @@ func (cfg *GormCfg) init() *GormClient {
 		}
 		break
 	default:
-		return &GormClient{
-			nil,
-			fmt.Errorf("engine %s not support", cfg.Engine),
-		}
+		return nil, fmt.Errorf("engine %s not support", cfg.Engine)
 	}
 	db, err := gorm.Open(cfg.Engine, buf.String())
 	if err != nil {
-		return &GormClient{nil, err}
+		return nil, fmt.Errorf("open gorm error: %s", err)
 	}
 	db.LogMode(cfg.Debug)
 	gorm.DefaultTableNameHandler = func(db *gorm.DB, defaultTableName string) string {
@@ -120,11 +116,10 @@ func (cfg *GormCfg) init() *GormClient {
 	if cfg.MaxIdleConn != 0 {
 		db.DB().SetMaxIdleConns(cfg.MaxIdleConn)
 	}
-
-	return &GormClient{db, nil}
+	return &GormClient{db}, nil
 }
 
 // Close sql client
-func (c *GormClient) Close() {
-	c.Close()
+func (c *GormClient) close() error {
+	return c.Close()
 }

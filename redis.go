@@ -31,10 +31,15 @@ type RedisClient struct {
 }
 
 // init redis connection from redis config
-func (cfg *RedisCfg) init() *RedisClient {
+func (cfg *RedisCfg) init() (*RedisClient, error) {
 	return &RedisClient{
 		redis.NewClient(&redis.Options{
 			Addr: cfg.Addr,
 		}),
-	}
+	}, nil
+}
+
+// close underlying redis client
+func (r *RedisClient) close() error {
+	return r.Close()
 }

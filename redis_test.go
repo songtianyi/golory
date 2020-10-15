@@ -15,7 +15,6 @@
 package golory
 
 import (
-	"fmt"
 	. "github.com/smartystreets/goconvey/convey"
 	"testing"
 )
@@ -43,15 +42,16 @@ func TestRedis_InitConn(t *testing.T) {
 	cfg2 := RedisCfg{
 		Addr: "127.0.0.1:6380",
 	}
-	fmt.Println()
 	Convey("Init redis conn", t, func() {
-		So(
-			cfg1.init().Ping().Err(),
+		c, _ := cfg1.init()
+		So(c.Ping().Err(),
 			ShouldBeNil,
 		)
-		So(
-			cfg2.init().Ping().Err(),
+		c.close()
+		c, _ = cfg2.init()
+		So(c.Ping().Err(),
 			ShouldNotBeNil,
 		)
+		c.close()
 	})
 }

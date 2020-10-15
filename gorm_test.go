@@ -47,8 +47,9 @@ func TestMySQL_InitConn(t *testing.T) {
 		DBName:   "golory",
 	}
 	Convey("Init mysql conn:", t, func() {
+		_, err := cfg1.init()
 		So(
-			cfg1.init().Err,
+			err,
 			ShouldBeNil,
 		)
 	})
@@ -66,8 +67,9 @@ func TestPostgres_InitConn(t *testing.T) {
 		},
 	}
 	Convey("Init postgres conn:", t, func() {
+		_, err := cfg1.init()
 		So(
-			cfg1.init().Err,
+			err,
 			ShouldBeNil,
 		)
 	})

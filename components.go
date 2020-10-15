@@ -28,3 +28,8 @@ func Redis(name string) *RedisClient {
 func Gorm(name string) *GormClient {
 	return gly.components.getGorm(name)
 }
+
+// TDengine return *TDengineClient by name
+func TDengine(name string) *TDengineClient {
+	return gly.components.getTDengine(name)
+}

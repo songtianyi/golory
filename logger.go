@@ -19,7 +19,6 @@ import (
 	"fmt"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
-	"log"
 )
 
 // LoggerCfg configurations
@@ -36,7 +35,7 @@ type LoggerClient struct {
 }
 
 // LoggerBoot logger from config
-func (cfg *LoggerCfg) init() *LoggerClient {
+func (cfg *LoggerCfg) init() (*LoggerClient, error) {
 	var js string
 	if cfg.Debug {
 		js = fmt.Sprintf(`{
@@ -56,15 +55,20 @@ func (cfg *LoggerCfg) init() *LoggerClient {
 
 	var zcfg zap.Config
 	if err := json.Unmarshal([]byte(js), &zcfg); err != nil {
-		panic(err)
+		return nil, fmt.Errorf("init logger error: %s", err)
 	}
 	zcfg.EncoderConfig = zap.NewProductionEncoderConfig()
 	zcfg.EncoderConfig.EncodeTime = zapcore.ISO8601TimeEncoder
 	var err error
 	l, err := zcfg.Build()
 	if err != nil {
-		log.Fatal("init logger error: ", err)
+		return nil, fmt.Errorf("init logger error: %s", err)
 	}
-	return &LoggerClient{l}
+	return &LoggerClient{l}, nil
 
+}
+
+func (s *LoggerClient) close() error {
+	// do nothing
+	return nil
 }
