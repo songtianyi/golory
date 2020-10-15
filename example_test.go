@@ -89,16 +89,16 @@ func ExampleMySQL() {
 	if err := golory.Boot([]byte(cfg)); err != nil {
 		fmt.Printf("boot golory failed, %s", err)
 	}
-	fmt.Println(golory.Gorm("default").Err == nil)
+	fmt.Println(golory.Gorm("default") == nil)
 	// Output:
-	// true
+	// false
 }
 
 func ExamplePostgres() {
 	cfg := `
 	[golory]
 		[golory.gorm.default]
-          debug = false
+          	  debug = false
 		  username = "golory"
 		  engine = "postgres"
 		  password = "golory"
@@ -110,7 +110,24 @@ func ExamplePostgres() {
 	if err := golory.Boot([]byte(cfg)); err != nil {
 		fmt.Printf("boot golory failed, %s", err)
 	}
-	fmt.Println(golory.Gorm("default").Err == nil)
+	fmt.Println(golory.Gorm("default") == nil)
 	// Output:
-	// true
+	// false
+}
+
+func ExampleTDengine() {
+	cfg := `
+	[golory]
+		[golory.tdengine.default]
+		  username = "root"
+		  password = "taosdata"
+		  addr = "192.168.1.99:6030"
+		  DBName = "top1"
+	`
+	if err := golory.Boot([]byte(cfg)); err != nil {
+		fmt.Printf("boot golory failed, %s", err)
+	}
+	fmt.Println(golory.TDengine("default") == nil)
+	// Output:
+	// false
 }
