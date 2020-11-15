@@ -8,7 +8,7 @@ require (
 	github.com/go-sql-driver/mysql v1.5.0
 	github.com/jinzhu/gorm v1.9.16
 	github.com/smartystreets/goconvey v1.6.4
-	github.com/taosdata/driver-go v0.0.0-20201027053823-66df175edf46
+	github.com/taosdata/driver-go v0.0.0-20201113094317-050667e5b4d0
 	go.uber.org/zap v1.16.0
 	gopkg.in/yaml.v2 v2.3.0
 )
